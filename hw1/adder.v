@@ -5,7 +5,8 @@
 
 `timescale 1 ns / 1 ns
 
-module adder(
+module adder
+       (
          input A, B, Ci,
          output S, Co
        );

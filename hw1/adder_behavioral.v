@@ -5,7 +5,8 @@
 
 `timescale 1 ns / 1 ns
 
-module adder_behavioral(
+module adder_behavioral
+       (
          input A, B, Ci,
          output S, Co
        );
