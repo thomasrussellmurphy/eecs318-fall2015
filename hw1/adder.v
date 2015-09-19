@@ -14,12 +14,12 @@ wire ABsum;
 wire ABcarry, Ccarry;
 
 // Compute the sum
-xor #10 ( ABSum, A, B );
-xor #10 ( S, Ci, ABsum );
+xor #10 u_sum1 ( ABSum, A, B );
+xor #10 u_sum2 ( S, Ci, ABsum );
 
 // Compute the ripple-carry
-and #10 ( Ccarry, ABsum, Ci );
-and #10 ( ABcarry, A, B );
-or #10 ( Co, Ccarry, ABcarry );
+and #10 u_carry1 ( Ccarry, ABsum, Ci );
+and #10 u_carry2 ( ABcarry, A, B );
+or #10 u_carry3 ( Co, Ccarry, ABcarry );
 
 endmodule
