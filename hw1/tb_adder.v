@@ -34,12 +34,12 @@ begin
 
 
   // Given the gate delay of #10, need to wait for a while
-  #200 $finish;
+  #500 $finish;
 end
 
 always forever
   begin
-    #10 counter = counter + 1;
+    #50 counter = counter + 1;
     { A, B, Ci } = counter[ 2: 0 ];
   end
 
