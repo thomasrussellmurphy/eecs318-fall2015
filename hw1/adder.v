@@ -3,7 +3,7 @@
 // The implementation a full-adder with a 10 unit gate delay
 // Will be used for implementing a ripple-carry adder
 
-`timescale 1 ns / 1 ps
+`timescale 1 ns / 1 ns
 
 module adder(
          input A, B, Ci,

@@ -2,7 +2,7 @@
 // EECS 318 Fall 2015
 // The testbench for the full-adder with a 10 unit gate delay
 
-`timescale 1 ns / 1 ps
+`timescale 1 ns / 1 ns
 
 module tb_adder();
 
