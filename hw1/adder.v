@@ -14,7 +14,7 @@ wire ABsum;
 wire ABcarry, Ccarry;
 
 // Compute the sum
-xor #10 u_sum1 ( ABSum, A, B );
+xor #10 u_sum1 ( ABsum, A, B );
 xor #10 u_sum2 ( S, Ci, ABsum );
 
 // Compute the ripple-carry
