@@ -6,7 +6,8 @@
 
 module tb_adder();
 
-wire A, B, Ci, S, Co;
+reg A, B, Ci;
+wire S, Co;
 
 integer counter;
 
@@ -15,7 +16,7 @@ adder DUT(
         .B( B ),
         .Ci( Ci ),
         .S( S ),
-        .Co( Co ),
+        .Co( Co )
       );
 
 initial
