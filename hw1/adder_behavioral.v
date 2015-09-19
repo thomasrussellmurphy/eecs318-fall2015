@@ -19,13 +19,13 @@ assign S = S_lcl;
 assign Co = Co_lcl;
 
 // Compute the sum
-always @(*) begin
+always @( * ) begin
   ABsum <= #10 A ^ B;
   S_lcl <= #10 Ci ^ ABsum;
 end
 
 // Compute the ripple-carry
-always @(*) begin
+always @( * ) begin
   Ccarry = ABsum & Ci;
   ABcarry = A & B;
   Co_lcl = Ccarry | ABcarry;
