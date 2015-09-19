@@ -20,15 +20,15 @@ assign Co = Co_lcl;
 
 // Compute the sum
 always @( * ) begin
-  ABsum <= #10 A ^ B;
-  S_lcl <= #10 Ci ^ ABsum;
+  #10 ABsum <= A ^ B;
+  #10 S_lcl <= Ci ^ ABsum;
 end
 
 // Compute the ripple-carry
 always @( * ) begin
-  Ccarry = ABsum & Ci;
-  ABcarry = A & B;
-  Co_lcl = Ccarry | ABcarry;
+  #10 Ccarry <= ABsum & Ci;
+  #10 ABcarry <= A & B;
+  #10 Co_lcl <= Ccarry | ABcarry;
 end
 
 endmodule
