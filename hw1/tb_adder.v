@@ -6,6 +6,10 @@
 
 module tb_adder();
 
+wire A, B, Ci, S, Co;
+
+integer counter;
+
 adder DUT(
         .A( A ),
         .B( B ),
@@ -13,10 +17,6 @@ adder DUT(
         .S( S ),
         .Co( Co ),
       );
-
-wire A, B, Ci, S, Co;
-
-integer counter;
 
 initial
 begin
@@ -42,4 +42,4 @@ always forever
     { A, B, Ci } = counter[ 2: 0 ];
   end
 
-endmodule;
+endmodule
