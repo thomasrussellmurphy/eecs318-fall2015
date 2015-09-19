@@ -8,16 +8,25 @@ module tb_adder();
 
 reg A, B, Ci;
 wire S, Co;
+wire S_b, Co_b;
 
 integer counter;
 
-adder DUT(
+adder DUT1 (
         .A( A ),
         .B( B ),
         .Ci( Ci ),
         .S( S ),
         .Co( Co )
       );
+
+adder_behavioral DUT2 (
+                   .A( A ),
+                   .B( B ),
+                   .Ci( Ci ),
+                   .S( S_b ),
+                   .Co( Co_b )
+                 );
 
 initial
 begin
@@ -29,17 +38,17 @@ begin
 
   // Save signal simulation data
   $dumpfile( "adder.vcd" );
-  $dumpvars( 1, A, B, Ci, S, Co );
+  $dumpvars( 1, A, B, Ci, S, Co, S_b, Co_b );
   $dumpflush;
 
 
   // Given the gate delay of #10, need to wait for a while
-  #500 $finish;
+  #1000 $finish;
 end
 
 always forever
   begin
-    #50 counter = counter + 1;
+    #100 counter = counter + 1;
     { A, B, Ci } = counter[ 2: 0 ];
   end
 
