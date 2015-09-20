@@ -1,0 +1,5 @@
+# Ignoring all of the stuff when working in this simulation environment
+*.vcd
+work
+*.wlf
+transcript
