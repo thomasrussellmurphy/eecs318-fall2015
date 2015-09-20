@@ -18,7 +18,7 @@ assign Ci = { Co[ 6: 0 ], 1'b0 };
 
 assign S = { Co[ 7 ], Spartial };
 
-adder [ 7: 0 ] adders (
+adder adders [ 7: 0 ] (
         .A( A ),
         .B( B ),
         .Ci( Ci ),
