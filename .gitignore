@@ -1,5 +1,6 @@
 # Ignoring all of the stuff when working in this simulation environment
+*.cr.mti
 *.vcd
-work
 *.wlf
 transcript
+work
