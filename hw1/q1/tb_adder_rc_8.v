@@ -45,7 +45,7 @@ end
 
 always forever
   begin
-    delay_clock <= #5 ~delay_clock;
+    #5 delay_clock = ~delay_clock;
   end
 
 endmodule
