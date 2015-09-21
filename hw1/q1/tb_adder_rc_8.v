@@ -18,6 +18,11 @@ adder_rc_8 DUT (
 
 initial
 begin
+  // Save signal simulation data
+  $dumpfile( "adder_rc_8_propagation.vcd" );
+  $dumpvars( 1, A, B, S );
+  $dumpflush;
+
   A = 8'b0;
   B = 8'b0;
 
@@ -30,11 +35,6 @@ begin
   #200
 
   B = 8'b1;
-
-  // Save signal simulation data
-  $dumpfile( "adder_rc_8_propagation.vcd" );
-  $dumpvars( 1, A, B, S );
-  $dumpflush;
 
   #500 $stop;
 end
