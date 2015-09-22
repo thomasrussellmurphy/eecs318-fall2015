@@ -13,10 +13,10 @@ wire [ 4: 0 ] S;
 reg delay_clock;
 
 adder_cla_4 DUT (
-             .A( A ),
-             .B( B ),
-             .S( S )
-           );
+              .A( A ),
+              .B( B ),
+              .S( S )
+            );
 
 initial
 begin
