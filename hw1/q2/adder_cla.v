@@ -6,10 +6,10 @@
 `timescale 1 ns / 1 ns
 
 module adder_cla
-(
-  input A, B, Ci
-  output S, p, g
-);
+       (
+         input A, B, Ci,
+         output S, p, g
+       );
 
 wire ABsum;
 
@@ -21,6 +21,6 @@ xor #10 u_sum2 ( S, Ci, ABsum );
 assign p = ABsum;
 
 // Calculate the generate
-and #10 u_generate (g, A, B);
+and #10 u_generate ( g, A, B );
 
 endmodule
