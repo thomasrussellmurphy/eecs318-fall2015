@@ -4,9 +4,8 @@
 
 module tb_multiplier_signed_5;
 
-
 reg signed [ 4: 0 ] A, B;
-wire signed [ 9: 0 ] P;
+wire signed [ 9: 0 ] P, P_expected;
 
 // Indicates some delay
 reg delay_clock;
@@ -17,6 +16,8 @@ multiplier_signed_5 multiplier
                       .B( B ),
                       .P( P )
                     );
+
+assign P_expected = A * B;
 
 initial
 begin
@@ -31,6 +32,17 @@ begin
   B = 5'sd0;
 
   // Propagate initial state
+  #20;
+
+  // An additional tests
+  A = 5'sd13;
+  B = 5'sd7;
+
+  #20;
+
+  A = -5'sd13;
+  B = 5'sd11;
+
   #20;
 
   // Test 1: -10*4
