@@ -10,8 +10,7 @@ module multiplier_signed_5
 
 // Create our signals
 wire [ 8: 0 ] partialP_0, partialP_1, partialP_2, partialP_3, partialP_4;
-wire [ 9: 0 ] adderS_2_0, adderS_2_1;
-wire [ 9: 0 ] adderS_1, adderS_0;
+wire [ 9: 0 ] adderS_0, adderS_1, adderS_2, adderS_3;
 
 // Generate the partial products
 and and_partialP_0 [ 4: 0 ] ( partialP_0[ 4: 0 ], { 5{ B[ 0 ] } }, A );
@@ -34,30 +33,30 @@ assign partialP_4[ 3: 0 ] = 4'b0 ;
 
 // Sum the partial products
 
-adder_rc_9_instant adder_9_2_0 (
+adder_rc_9_instant adder_9_0 (
                      .A( partialP_0 ),
                      .B( partialP_1 ),
-                     .S( adderS_2_0 )
-                   );
-
-adder_rc_9_instant adder_9_2_1 (
-                     .A( partialP_2 ),
-                     .B( partialP_3 ),
-                     .S( adderS_2_1 )
-                   );
-
-adder_rc_9_instant adder_9_1 (
-                     .A( adderS_2_0[ 8: 0 ] ),
-                     .B( adderS_2_1[ 8: 0 ] ),
-                     .S( adderS_1 )
-                   );
-
-adder_rc_9_instant adder_9_0 (
-                     .A( adderS_1[ 8: 0 ] ),
-                     .B( partialP_4 ),
                      .S( adderS_0 )
                    );
 
-assign P = //adderS_0;
+adder_rc_9_instant adder_9_1 (
+                     .A( partialP_2 ),
+                     .B( adderS_0 [ 8: 0 ] ),
+                     .S( adderS_1 )
+                   );
+
+adder_rc_9_instant adder_9_2 (
+                     .A( partialP_3 ),
+                     .B( adderS_1[ 8: 0 ] ),
+                     .S( adderS_2 )
+                   );
+
+adder_rc_9_instant adder_9_3 (
+                     .A( partialP_4 ),
+                     .B( adderS_2[ 8: 0 ] ),
+                     .S( adderS_3 )
+                   );
+
+assign P = adderS_3;
 
 endmodule
