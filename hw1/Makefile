@@ -7,6 +7,18 @@ build2:
 	-vlib work
 	vlog -novopt q2/*.v
 
+build3:
+	-vlib work
+	vlog -novopt q3/*.v
+
+build4:
+	-vlib work
+	vlog -novopt q4/*.v
+
+build5:
+	-vlib work
+	vlog -novopt q5/*.v
+
 clean:
 	/bin/rm -rf work transcript vsim.wlf */*.*~
 
