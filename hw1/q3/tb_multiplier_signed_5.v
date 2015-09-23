@@ -34,7 +34,7 @@ begin
   // Propagate initial state
   #20;
 
-  // An additional tests
+  // Some additional tests
   A = 5'sd13;
   B = 5'sd7;
 
@@ -42,6 +42,11 @@ begin
 
   A = -5'sd13;
   B = 5'sd11;
+
+  #20;
+
+  A = 5'sd11;
+  B = -5'sd13;
 
   #20;
 
