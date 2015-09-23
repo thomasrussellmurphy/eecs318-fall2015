@@ -9,3 +9,8 @@ build2:
 
 clean:
 	/bin/rm -rf work transcript vsim.wlf */*.*~
+
+# Settings copied from my style-verilog.sh
+style:
+	iStyle --indent=spaces=2 --convert-tabs --suffix=".old~" --pad=all */*.v
+	echo 'you should probably run `make clean`'
