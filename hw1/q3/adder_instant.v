@@ -3,8 +3,6 @@
 // The implementation a full-adder without any delay
 // Will be used for implementing a ripple-carry adder
 
-`timescale 1 ns / 1 ns
-
 module adder_instant
        (
          input A, B, Ci,

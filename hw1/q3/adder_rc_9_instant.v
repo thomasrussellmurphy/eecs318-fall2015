@@ -2,8 +2,6 @@
 // EECS 319 Fall 2015
 // The implementation a 9-bit adder using the full-adder implementation
 
-`timescale 1 ns / 1 ns
-
 module adder_rc_9_instant
        (
          input [ 8: 0 ] A,
