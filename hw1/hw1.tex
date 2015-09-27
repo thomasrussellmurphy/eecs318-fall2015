@@ -1,0 +1,103 @@
+\documentclass[10pt]{article}
+
+\usepackage[psamsfonts]{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+
+\usepackage[left=2.35cm,top=2.45cm,bottom=2.45cm,right=2.35cm,letterpaper]{geometry}
+
+\usepackage{hyperref}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhf{}
+\fancyfoot[C,CO]{\thepage}
+\fancyhead[L,LO]{\bfseries EECS 318}
+\fancyhead[C,CO]{\bfseries Homework 1}
+\fancyhead[R,RO]{Fall 2015}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem*{solution}{Solution}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\labelenumi}{\textbf{(\alph{enumi})}}
+\renewcommand{\labelenumii}{\textbf{(\roman{enumii})}}
+
+\newcommand{\ds}{\displaystyle}
+
+\parindent=0pt
+
+\begin{document}
+
+  \begin{center}
+  \section*{Homework 1}
+  \end{center}
+  Thomas Murphy (\textit{trm70})
+
+  \today
+
+  \bigskip
+
+  \begin{problem}
+    Ripple-Carry Adder
+
+    \begin{enumerate}
+      \item Design the 8-bit ripple-carry adder with 10-unit gate delay. The required adder is implemented in \texttt{adder.v}, the full-adder; \texttt{\detokenize{adder_rc_8.v}}, the instantiation and connection of 8 full-adders in the ripple-carry configuration; and \texttt{\detokenize{tb_adder_rc_8.v}}, the 8-bit testbench.
+      \item Input with largest delay on most significant bit
+      \item Verification of timing results
+    \end{enumerate}
+  \end{problem}
+
+  \newpage
+
+  \begin{problem}
+    Carry-Lookahead Adder
+
+    \begin{enumerate}
+      \item
+    \end{enumerate}
+  \end{problem}
+
+  \newpage
+
+  \begin{problem}
+    Signed Multiplier
+
+    \begin{enumerate}
+      \item
+    \end{enumerate}
+  \end{problem}
+
+  \newpage
+
+  \begin{problem}
+    Carry-Save Adder
+
+    \begin{enumerate}
+      \item
+    \end{enumerate}
+  \end{problem}
+
+  \newpage
+
+  \begin{problem}
+    State Machine
+
+    \begin{enumerate}
+      \item
+    \end{enumerate}
+  \end{problem}
+
+\end{document}
