@@ -4,3 +4,8 @@
 *.wlf
 transcript
 work
+
+# Ignoring LaTeX stuff
+*.aux
+*.out
+*.pdf
