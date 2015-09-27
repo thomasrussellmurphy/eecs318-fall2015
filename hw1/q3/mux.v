@@ -1,4 +1,4 @@
-// Thomas Russell Murphy (trm80)
+// Thomas Russell Murphy (trm70)
 // EECS 319 Fall 2015
 // A 2-to-1 mux, because we don't have one
 // When sel is asserted (1), propagate B

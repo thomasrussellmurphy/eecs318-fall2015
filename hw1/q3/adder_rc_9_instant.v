@@ -1,4 +1,4 @@
-// Thomas Russell Murphy (trm80)
+// Thomas Russell Murphy (trm70)
 // EECS 319 Fall 2015
 // The implementation a 9-bit adder using the full-adder implementation
 

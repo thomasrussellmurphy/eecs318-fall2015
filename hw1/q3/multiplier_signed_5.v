@@ -25,24 +25,25 @@ negate_5 negate_B (
          );
 
 // Choosing what gets used
-wire swap, double_invert;
-wire [ 4: 0 ] swA, swB;
+wire swapA, swapB;
+wire neg_result;
 
-assign swap = B[ 4 ];
-and double_negative( double_invert, A[ 4 ], B[ 4 ] );
+assign swapA = A[ 4 ];
+assign swapB = B[ 4 ];
+xor result_sign ( neg_result, swapA, swapB);
 
-mux swaps [ 9: 0 ] (
-      .sel( swap ),
-      .A( { A, B } ),
-      .B( { B, A } ),
-      .Z( { swA, swB } )
+mux swap_in_negA [ 4: 0 ] (
+      .sel( swapA ),
+      .A( A ),
+      .B( negA ),
+      .Z( multA )
     );
 
-mux choose_double_negative [ 9: 0 ] (
-      .sel( double_invert ),
-      .A( { swA, swB } ),
-      .B( { negA, negB } ),
-      .Z( { multA, multB } )
+mux swap_in_negB [ 4: 0 ] (
+      .sel( swapB ),
+      .A( B ),
+      .B( negB ),
+      .Z( multB )
     );
 
 // Create our partial products
@@ -94,6 +95,20 @@ adder_rc_9_instant adder_9_3 (
                      .S( adderS_3 )
                    );
 
-assign P = adderS_3;
+wire [9:0] pos_result, neg_result;
+
+assign pos_result = adderS_3;
+
+negate_10 negate_result (
+           .A( pos_result ),
+           .N( neg_result )
+         );
+
+mux swap_neg_result [9:0] (
+  .sel(neg_result),
+  .A(pos_result),
+  .B(neg_result),
+  .Z(P)
+);
 
 endmodule
