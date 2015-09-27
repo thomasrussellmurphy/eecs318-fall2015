@@ -26,11 +26,11 @@ negate_5 negate_B (
 
 // Choosing what gets used
 wire swapA, swapB;
-wire neg_result;
+wire change_result_sign;
 
 assign swapA = A[ 4 ];
 assign swapB = B[ 4 ];
-xor result_sign ( neg_result, swapA, swapB);
+xor result_sign ( change_result_sign, swapA, swapB );
 
 mux swap_in_negA [ 4: 0 ] (
       .sel( swapA ),
@@ -95,20 +95,20 @@ adder_rc_9_instant adder_9_3 (
                      .S( adderS_3 )
                    );
 
-wire [9:0] pos_result, neg_result;
+wire [ 9: 0 ] pos_result, neg_result;
 
 assign pos_result = adderS_3;
 
 negate_10 negate_result (
-           .A( pos_result ),
-           .N( neg_result )
-         );
+            .A( pos_result ),
+            .N( neg_result )
+          );
 
-mux swap_neg_result [9:0] (
-  .sel(neg_result),
-  .A(pos_result),
-  .B(neg_result),
-  .Z(P)
-);
+mux swap_neg_result [ 9: 0 ] (
+      .sel( change_result_sign ),
+      .A( pos_result ),
+      .B( neg_result ),
+      .Z( P )
+    );
 
 endmodule

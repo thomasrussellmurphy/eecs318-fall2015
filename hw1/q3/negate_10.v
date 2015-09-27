@@ -2,7 +2,7 @@
 // EECS 319 Fall 2015
 // The implementation of the negation of a 10-bit number
 
-module negate_5
+module negate_10
        (
          input [ 9: 0 ] A,
          output [ 9: 0 ] N
