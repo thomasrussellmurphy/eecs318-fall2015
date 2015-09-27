@@ -1,4 +1,11 @@
 # Hi, this is something that resembles a makefile
+all:
+	make build1
+	make build2
+	make build3
+	make build4
+	make build5
+
 build1:
 	-vlib work
 	vlog -novopt q1/*.v
@@ -18,6 +25,9 @@ build4:
 build5:
 	-vlib work
 	vlog -novopt q5/*.v
+
+report:
+	pdflatex hw1.tex
 
 clean:
 	/bin/rm -rf work transcript vsim.wlf */*.*~
