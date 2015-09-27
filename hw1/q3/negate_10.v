@@ -15,7 +15,7 @@ assign Ci = { Co[ 8: 0 ], 1'b1 };
 
 not not_A [ 9: 0 ] ( invA, A );
 
-adder_instant adders [ 4: 0 ] (
+adder_instant adders [ 9: 0 ] (
                 .A( invA ),
                 .B( 10'b0 ),
                 .Ci( Ci ),
