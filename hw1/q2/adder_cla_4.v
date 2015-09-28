@@ -1,7 +1,7 @@
 // Thomas Russell Murphy (trm70)
 // EECS 318 Fall 2015
-// The implementation an 8-bit adder using the full-adder implementation
-// Due to ripple-carry behavior, the full-adder delays will be long
+// The implementation a 4-bit adder using the CLA blocks
+// Foregoes the ripple-carry behavior, reducing the delay
 
 `timescale 1 ns / 1 ns
 
