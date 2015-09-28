@@ -54,9 +54,22 @@
     Ripple-Carry Adder
 
     \begin{enumerate}
-      \item Design the 8-bit ripple-carry adder with 10-unit gate delay. The required adder is implemented in \texttt{adder.v}, the full-adder; \texttt{\detokenize{adder_rc_8.v}}, the instantiation and connection of 8 full-adders in the ripple-carry configuration; and \texttt{\detokenize{tb_adder_rc_8.v}}, the 8-bit testbench.
+      \item Design the 8-bit ripple-carry adder with 10-unit gate delay.
+
+      The adder is implemented in \texttt{q1/adder.v}, the full-adder and \texttt{\detokenize{q1/adder_rc_8.v}}, the instantiation and connection of 8 full-adders in the ripple-carry configuration.
+
       \item Input with largest delay on most significant bit
+
+      The path with the largest delay to propagate to to the MSB of the sum is the one with the most carries created. The 4-bit case is illustrated in the assignment: taking the sum of \texttt{4'b1111} and \texttt{4'b0001}. This path can be demonstrated by transitioning the $B$ input to the adder from \texttt{0} to \texttt{1}. Disregarding interconnect delays, the combinatorial path for this transition takes 2 gate delays to propagate through each full adder along the $n$-bit adder. Thus, with a 10-unit gate delay and an 8-bit adder, the expected delay on this path is 160 units.
+
       \item Verification of timing results
+
+      The testbench to produce the largest delay is implemented in \texttt{\detokenize{q1/tb_adder_rc_8.v}}, the 8-bit testbench. The waveform produced from the testbench around the largest propagation delay transition is visualized below.
+
+      \includegraphics*[width=0.9\textwidth] {adder_rc_8_propagation-screenshot.png}
+
+      The expected gate delay is seen between the B marker and the primary marker with a difference of 160 ns in a 1 ns delay unit simulation.
+
     \end{enumerate}
   \end{problem}
 
@@ -66,7 +79,22 @@
     Carry-Lookahead Adder
 
     \begin{enumerate}
-      \item
+      \item Design the 4-bit CLA adder with 10-unit gate delay
+
+      The adder is implemented in \texttt{\detokenize{q2/adder_cla.v}}, the partial full-adder and \texttt{\detokenize{q2/adder_cla_4.v}}, the instantiation and connection of 4 partial full-adders and the 4 carry-look-ahead logic modules (\texttt{q2/cla0.v},\texttt{q2/cla1.v},\texttt{q2/cla2.v}, and \texttt{q2/cla3.v}).
+
+      \item Input with largest delay on most significant bit
+
+      The path with the largest delay to propagate to the MSB of the sum is any update to the input that produces the final carry: either by generation or by propagation. Since all of the propagation and generation signals are produced within two gate delays and the wide-AND/wide-OR implementation of the final CLA produces a carry out in two gate delays, the maximum delay is four gate delays. With a 10-unit gate delay, the expected delay on this path is 40 units.
+
+      \item Verification of timing results
+
+      The testbench to produce the largest delay is implemented in \texttt{\detokenize{q2/tb_adder_cla_4.v}}. It implements the narrower case as in Question 1, adding \texttt{0} and then \texttt{1} to \texttt{4'b1111}. The waveform produced from the testbench around the largest propagation delay transition is visualized below.
+
+      \includegraphics*[width=0.9\textwidth] {adder_cla_4_propagation-screenshot.png}
+
+      The expected gate delay is seen between the B marker and the primary marker with a difference of 40 ns in a 1 ns delay unit simulation.
+
     \end{enumerate}
   \end{problem}
 
