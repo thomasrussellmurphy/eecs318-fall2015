@@ -30,7 +30,7 @@ report:
 	pdflatex hw1.tex
 
 clean:
-	/bin/rm -rf work transcript vsim.wlf */*.*~
+	/bin/rm -rf work transcript vsim.wlf */*.*~ *.out *.aux *.pdf *.log
 
 # Settings copied from my style-verilog.sh
 style:
