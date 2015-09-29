@@ -124,7 +124,29 @@
 
     \begin{enumerate}
       \item Design a CSA to add a sequence of 10 8-bit numbers. How many CSA stages are needed?
+
+      The adder needs five CSA stages. They operate, for the inputs \texttt{a}, \texttt{b}, \texttt{c}, \texttt{d}, \texttt{e}, \texttt{f}, \texttt{g}, \texttt{h}, \texttt{i}, \texttt{j}, and an output \texttt{z} as follows:
+      \begin{enumerate}
+        % Stage 1
+        \item Stage 1 implements 3 8-bit input CSAs. It consumes the values \texttt{a}, \texttt{b}, \texttt{c}, \texttt{d}, \texttt{e}, \texttt{f}, \texttt{g}, \texttt{h}, \texttt{i}. It produces the values \texttt{\detokenize{s_abc}}, \texttt{\detokenize{c_abc}}, \texttt{\detokenize{s_def}}, \texttt{\detokenize{c_def}}, \texttt{\detokenize{s_ghi}}, \texttt{\detokenize{c_ghi}}.
+        % Stage 2
+        \item Stage 2 implements 2 9-bit input CSAs. It consumes the values \texttt{\detokenize{s_abc}}, \texttt{\detokenize{c_abc}}, \texttt{\detokenize{s_def}}, \texttt{\detokenize{c_def}}, \texttt{\detokenize{s_ghi}}, \texttt{\detokenize{c_ghi}}. It produces the values \texttt{\detokenize{s_csa2_A}}, \texttt{\detokenize{c_csa2_A}}, \texttt{\detokenize{s_csa2_B}}, \texttt{\detokenize{c_csa2_B}}.
+        % Stage 3
+        \item Stage 3 implements 2 10-bit input CSAs. It consumes the values \texttt{\detokenize{s_csa2_A}}, \texttt{\detokenize{c_csa2_A}}, \texttt{\detokenize{s_csa2_B}}, \texttt{\detokenize{c_csa2_B}}, \texttt{j}, \texttt{0}. It produces the values .
+        % Stage 4
+        \item Stage 4 implements 1 11-bit input CSA. It consumes the values \texttt{\detokenize{s_csa3_A}}, \texttt{\detokenize{c_csa3_A}}, \texttt{\detokenize{s_csa3_B}}. It produces the values \texttt{\detokenize{s_csa4}}, \texttt{\detokenize{c_csa4}}.
+        % Stage 5
+        \item Stage 5 implements 1 12-bit input CSA. It consumes the values \texttt{\detokenize{s_csa4}}, \texttt{\detokenize{c_csa4}}, \texttt{\detokenize{c_csa3_B}}. It produces the values \texttt{\detokenize{s_csa5}}, \texttt{\detokenize{c_csa5}}.
+        % Final adder stage
+        \item The final stage of the adder is a normal ripple-carry adder for two 13-bit numbers. It consumes the values \texttt{\detokenize{s_csa5}}, \texttt{\detokenize{c_csa5}}. It produces the result value \texttt{z}.
+      \end{enumerate}
+
       \item Simulate adder with two input tuples: $(11, 2, 13, 4, 5, 6, 7, 8, 9, 10)$, $(3, 14, 5, 6, 7, 8, 19, 10)$.
+
+      The simulation result with the 10-tuple and the 8-tuple, in comparison with the Verilog-computed result are:
+
+            \includegraphics*[width=0.9\textwidth] {csa_10_8-screenshot.png}
+
     \end{enumerate}
   \end{problem}
 
