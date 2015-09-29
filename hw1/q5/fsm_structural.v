@@ -37,8 +37,8 @@ nor( k1, pre_k1_and1, pre_k1_and2 );
 jkff jk_y1
      (
        .clk( clk ),
-       .j(),
-       .k(),
+       .j( j1 ),
+       .k( k1 ),
        .q( y1 ),
        .q_( y1_ )
      );
@@ -51,8 +51,8 @@ or( k2, y1, x );
 jkff jk_y2
      (
        .clk( clk ),
-       .j(),
-       .k(),
+       .j( j2 ),
+       .k( k2 ),
        .q( y2 ),
        .q_( y2_ )
      );

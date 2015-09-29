@@ -16,6 +16,8 @@ assign q_ = ~state;
 
 always @( posedge clk ) begin
   case ( { j, k } )
+    2'b00: // idle
+      state <= state;
     2'b01:
       state <= 1'b0; // reset
     2'b11:
@@ -23,7 +25,7 @@ always @( posedge clk ) begin
     2'b10:
       state <= 1'b1; // set
     default:
-      state <= state;
+      state <= 1'b0; // go to default state
   endcase
 end
 
