@@ -17,11 +17,11 @@ wire ABcarry, Ccarry;
 
 // Compute the partial sum component
 xor u_sum1 ( ABsum, x, y );
-xor u_sum2 ( S, z, ABsum );
+xor u_sum2 ( s, z, ABsum );
 
 // Compute the shifted carry component
 and u_carry1 ( Ccarry, ABsum, z );
 and u_carry2 ( ABcarry, x, y );
-or u_carry3 ( Co, Ccarry, ABcarry );
+or u_carry3 ( c, Ccarry, ABcarry );
 
 endmodule

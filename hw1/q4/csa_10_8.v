@@ -24,7 +24,7 @@ csa csa1_abc [ 7: 0 ]
       .y( b ),
       .z( c ),
       .s( s_abc ),
-      .c( c_ghi )
+      .c( c_abc )
     );
 
 csa csa1_def [ 7: 0 ]
@@ -42,14 +42,14 @@ csa csa1_ghi [ 7: 0 ]
       .y( h ),
       .z( i ),
       .s( s_ghi ),
-      .c( c_def )
+      .c( c_ghi )
     );
 
 // Layer 2: consumes s_abc, c_abc, s_def, c_def, s_ghi, c_ghi
 // Widths are all 9 due to shifted carries
 
-wire [ 8: 0 ] s_csa2_A, c_csa_A;
-wire [ 8: 0 ] s_csa2_B, c_csa_B;
+wire [ 8: 0 ] s_csa2_A, c_csa2_A;
+wire [ 8: 0 ] s_csa2_B, c_csa2_B;
 
 csa csa2_A [ 8: 0 ]
     (
@@ -57,7 +57,7 @@ csa csa2_A [ 8: 0 ]
       .y( { c_abc, 1'b0 } ),
       .z( { 1'b0, s_def } ),
       .s( s_csa2_A ),
-      .c( c_csa_A )
+      .c( c_csa2_A )
     );
 
 csa csa2_B [ 8: 0 ]
@@ -69,7 +69,7 @@ csa csa2_B [ 8: 0 ]
       .c( c_csa2_B )
     );
 
-// Layer 3: consumes s_csa2_A, c_csa_A, s_csa2_B, c_csa_B, j
+// Layer 3: consumes s_csa2_A, c_csa2_A, s_csa2_B, c_csa2_B, j
 // Widths are now 10
 
 wire [ 9: 0 ] s_csa3_A, c_csa3_A;
@@ -78,7 +78,7 @@ wire [ 9: 0 ] s_csa3_B, c_csa3_B;
 csa csa3_A [ 9: 0 ]
     (
       .x( { 1'b0, s_csa2_A } ),
-      .y( { c_csa_A, 1'b0 } ),
+      .y( { c_csa2_A, 1'b0 } ),
       .z( { 1'b0, s_csa2_B } ),
       .s( s_csa3_A ),
       .c( c_csa3_A )
@@ -86,7 +86,7 @@ csa csa3_A [ 9: 0 ]
 
 csa csa3_B [ 9: 0 ]
     (
-      .x( { c_csa_B, 1'b0 } ),
+      .x( { c_csa2_B, 1'b0 } ),
       .y( { 2'b0, j } ),
       .z( 10'b0 ),
       .s( s_csa3_B ),
@@ -94,6 +94,7 @@ csa csa3_B [ 9: 0 ]
     );
 
 // Layer 4: consumes s_csa3_A, c_csa3_A, s_csa3_B
+// Widths are now 11
 
 wire [ 10: 0 ] s_csa4, c_csa4;
 
@@ -106,7 +107,8 @@ csa csa4 [ 10: 0 ]
       .c( c_csa4 )
     );
 
-// Layer 5: consumes s_csa4, c_csa4, c_csa3_B,
+// Layer 5: consumes s_csa4, c_csa4, c_csa3_B
+// Widths are now 12
 
 wire [ 11: 0 ] s_csa5, c_csa5;
 
@@ -120,7 +122,9 @@ csa csa5 [ 11: 0 ]
     );
 
 // Final Adder
+// Widths are now 13
 
+// Final output result is 14 bits to hold adder result
 wire [ 13: 0 ] wide_result;
 
 adder_rc_instant
