@@ -5,7 +5,10 @@
 transcript
 work
 
+# Keeping PDFs in this directory
+!*.pdf
+
 # Ignoring LaTeX stuff
 *.aux
 *.out
-*.pdf
+*/*.pdf
