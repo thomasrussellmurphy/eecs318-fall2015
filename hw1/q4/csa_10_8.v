@@ -125,6 +125,7 @@ adder_rc
   #(
     .IN_WIDTH( 13 )
   )
+  adder
   (
     .A( { 1'b0, s_csa5 } ),
     .B( { c_csa5, 1'b0 } ),
