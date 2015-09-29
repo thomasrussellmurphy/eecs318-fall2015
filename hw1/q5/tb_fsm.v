@@ -39,6 +39,9 @@ begin
 
   x = 1'b0;
 
+  // Synchronize x transitions to the clock
+  #5;
+
   // Let it flop around for a while
   #200;
 
