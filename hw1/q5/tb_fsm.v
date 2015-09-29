@@ -42,16 +42,18 @@ begin
   // Synchronize x transitions to the clock
   #5;
 
-  // Let it flop around for a while
-  #200;
+  // Have the steady state achieved by not-asserted x.
+  #50;
 
   x = 1'b1;
   #10;
   x = 1'b0;
   #20;
   x = 1'b1;
+  #100;
+  x = 1'b0;
 
-  #200 $stop;
+  #100 $stop;
 end
 
 always forever
