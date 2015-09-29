@@ -135,6 +135,27 @@
 
     \begin{enumerate}
       \item Derive a state diagram
+
+      Since a state table is easier to textually represent, the four $(Y_2, Y_1)$ pairs are states that have the following next-states based on the value of $X$
+
+      \begin{center}
+      \begin{tabular}{ c c | c c }
+      % Header row
+      $(Y_2, Y_1)$ & $S$ & % on to two next-state columns
+      $S^* @ X = 0$ & $S^* @ X = 1$ \\
+      \hline
+      % Table contents
+      $(0, 0)$ & $A$ &
+      $D$ & $C$ \\
+      $(0, 1)$ & $B$ &
+      $A$ & $A$ \\
+      $(1, 1)$ & $C$ &
+      $A$ & $B$ \\
+      $(1, 0)$ & $D$ &
+      $D$ & $C$ \\
+      \end{tabular}
+      \end{center}
+
       \item Write a structural Verilog model and simulate it
       \item Write a behavioral Verilog model from the state-diagram and simulate it
       \item How can the equivalence of the models in (a) and (c) are equivalent?
