@@ -1,29 +1,26 @@
 # Hi, this is something that resembles a makefile
-all:
-	make build1
-	make build2
-	make build3
-	make build4
-	make build5
+.PHONY: make_work all build1 build2 build3 build4 build5 report clean style
+
+make_work:
+	-vlib work
+
+all: | make_work build_all
+
+build_all: build1 build2 build3 build4 build5
 
 build1:
-	-vlib work
 	vlog -novopt q1/*.v
 
 build2:
-	-vlib work
 	vlog -novopt q2/*.v
 
 build3:
-	-vlib work
 	vlog -novopt q3/*.v
 
-build4:
-	-vlib work
+build4: build3
 	vlog -novopt q4/*.v
 
 build5:
-	-vlib work
 	vlog -novopt q5/*.v
 
 report:
