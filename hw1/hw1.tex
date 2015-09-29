@@ -157,8 +157,17 @@
       \end{center}
 
       \item Write a structural Verilog model and simulate it
+
+      Implemented in \texttt{\detokenize{q5/fsm_structural.v}}.
+
       \item Write a behavioral Verilog model from the state-diagram and simulate it
-      \item How can the equivalence of the models in (a) and (c) are equivalent?
+
+      Implemented in \texttt{\detokenize{q5/fsm_behavioral.v}}.
+
+      \item How to verify that the models in (a) and (c) are equivalent?
+
+      During simulation, the state transitions in the table can be compared with the state transitions displayed by the behavioral model given a certain \texttt{clk} and \texttt{x} stimulus.
+
     \end{enumerate}
   \end{problem}
 
