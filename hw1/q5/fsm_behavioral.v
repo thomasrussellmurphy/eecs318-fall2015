@@ -15,8 +15,11 @@ parameter sA = 2'b00, sB = 2'b01, sC = 2'b11, sD = 2'b10;
 reg y2, y1;
 reg [ 1: 0 ] next_state;
 
+initial
+  { y2, y1 } = 2'b0;
+
 // Output expression with simplifications
-assign z2 = x;
+assign z2 = ~x;
 assign z1 = y1 && y2;
 
 always @( posedge clk ) begin
@@ -28,10 +31,10 @@ always @( * ) begin
     sA:
       if ( x )
       begin
-        next_state <= sD;
+        next_state <= sC;
       end else
       begin
-        next_state <= sC;
+        next_state <= sD;
       end
     sB:
       if ( x )
@@ -44,18 +47,18 @@ always @( * ) begin
     sC:
       if ( x )
       begin
-        next_state <= sA;
+        next_state <= sB;
       end else
       begin
-        next_state <= sB;
+        next_state <= sA;
       end
     sD:
       if ( x )
       begin
-        next_state <= sD;
+        next_state <= sC;
       end else
       begin
-        next_state <= sC;
+        next_state <= sD;
       end
     default:
       next_state <= sA;

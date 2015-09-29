@@ -13,13 +13,16 @@ module jkff
 
 reg state;
 
+initial
+  state = 1'b0;
+
 assign q = state;
 assign q_ = ~state;
 
 always @( posedge clk ) begin
   case ( { j, k } )
-    2'b00: // idle
-      state <= state;
+    2'b00:
+      state <= state; // idle
     2'b01:
       state <= 1'b0; // reset
     2'b11:
