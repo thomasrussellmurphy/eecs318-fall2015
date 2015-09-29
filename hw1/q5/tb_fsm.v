@@ -31,7 +31,7 @@ fsm_structural DUT2
 initial
 begin
   // Save signal simulation data
-  $dumpfile( "adder_cla_4_propagation.vcd" );
+  $dumpfile( "fsm_sim.vcd" );
   $dumpvars( 1, clk, x, z1_b, z2_b, z1_s, z2_s );
   $dumpflush;
 
