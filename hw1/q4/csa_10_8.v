@@ -3,6 +3,8 @@
 // The implementation of a 10-input, 8-bit carry-save adder
 // Maximum output value is about 11.3 bits, requiring 12 bit output width
 
+`timescale 1 ns / 1 ns
+
 module csa_10_8
        (
          input [ 7: 0 ] a, b, c, d, e, f, g, h, i, j,
@@ -119,9 +121,9 @@ csa csa5 [ 11: 0 ]
 
 // Final Adder
 
-wire [ 12: 0 ] wide_result;
+wire [ 13: 0 ] wide_result;
 
-adder_rc
+adder_rc_instant
   #(
     .IN_WIDTH( 13 )
   )
