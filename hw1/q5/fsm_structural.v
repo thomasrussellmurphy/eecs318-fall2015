@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // The implementation of the state machine using 'structural' Verilog
 
+`timescale 1 ns / 1 ns
+
 module fsm_structural
        (
          input clk, x,

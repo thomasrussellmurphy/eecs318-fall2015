@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // The implementation of a J-K flip flop
 
+`timescale 1 ns / 1 ns
+
 module jkff
        (
          input clk,
