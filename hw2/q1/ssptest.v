@@ -3,7 +3,7 @@
 // The provided testing modules for operating the ssp implementation
 // Improved from original file as required/desired
 
-`timescale 1 ns / 1 ns
+`timescale 1 ns / 10 ps
 
 module ssp_test1;
 

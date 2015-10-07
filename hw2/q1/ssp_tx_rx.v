@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // The core serialization/deserialization logic for the SSP
 
+`timescale 1 ns / 10 ps
+
 module ssp_tx_rx (
          input PCLK,
          input CLEAR_B,

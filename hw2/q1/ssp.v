@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // Synchronous Serial Port implementation with the required interface
 
+`timescale 1 ns / 10 ps
+
 module ssp (
          input PCLK,
          input CLEAR_B, PSEL, PWRITE,

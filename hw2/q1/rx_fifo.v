@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // The FIFO for the receive side of the SSP implementation
 
+`timescale 1 ns / 10 ps
+
 module rx_fifo
 (
   input PCLK,
