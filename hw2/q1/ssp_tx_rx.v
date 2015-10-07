@@ -2,6 +2,18 @@
 // EECS 318 Fall 2015
 // The core serialization/deserialization logic for the SSP
 
+// Processor interface uses:
+// CLEAR_B
+
+// Receive FIFO interface logic uses:
+// RxData, RxNextWord
+
+// Transmit FIFO interface logic uses:
+// TxData, TxValidWord, TxNextWord
+
+// World-facing serial port interface uses:
+// SSPCLKIN, SSPFSSIN, SSPRXD, SSPCLKOUT, SSPFSSOUT, SSPTXD, SSPOE_B
+
 `timescale 1 ns / 10 ps
 
 module ssp_tx_rx (
@@ -9,11 +21,11 @@ module ssp_tx_rx (
          input CLEAR_B,
          input SSPCLKIN, SSPFSSIN, SSPRXD,
          input [ 7: 0 ] TxData,
-         // Interface to TX FIFO
+         input TxValidWord,
+         output TxNextWord,
          output [ 7: 0 ] RxData,
-         // Interface to RX FIFO
+         output RxNextWord
          output SSPCLKOUT, SSPFSSOUT, SSPTXD, SSPOE_B,
-         output SSPTXINTR, SSPRXINTR
        );
 
 endmodule
