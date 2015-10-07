@@ -14,50 +14,53 @@ module ssp (
          output SSPTXINTR, SSPRXINTR
        );
 
+// Interfaces to FIFOs
+wire RxNextWord, TxValidWord, TxNextWord;
+wire [ 7: 0 ] RxData, TxData;
 
 // Instance rx_fifo
 rx_fifo
   (
-    .PCLK(),
-    .CLEAR_B(),
-    .PSEL(),
-    .PWRITE(),
-    .RxData(),
-    .NextWord(),
-    .PRDATA(),
-    .SSPRXINTR()
+    .PCLK( PCLK ),
+    .CLEAR_B( CLEAR_B ),
+    .PSEL( PSEL ),
+    .PWRITE( PWRITE ),
+    .RxData( RxData ),
+    .NextWord( RxNextWord ),
+    .PRDATA( PRDATA ),
+    .SSPRXINTR( SSPRXINTR )
   );
 
 // Instance tx_fifo
-rx_fifo
+tx_fifo
   (
-    .PCLK(),
-    .CLEAR_B(),
-    .PSEL(),
-    .PWRITE(),
-    .PWDATA(),
-    .NextWord(),
-    .ValidWord(),
-    .TxData(),
-    .SSPTXINTR()
+    .PCLK( PCLK ),
+    .CLEAR_B( CLEAR_B ),
+    .PSEL( PSEL ),
+    .PWRITE( PWRITE ),
+    .PWDATA( PWDATA ),
+    .NextWord( TxNextWord ),
+    .ValidWord( TxValidWord ),
+    .TxData( TxData ),
+    .SSPTXINTR( SSPTXINTR )
   );
 
 // Instance ssp_tx_rx
 ssp_tx_rx (
-    .PCLK(),
-    .CLEAR_B(),
-    .SSPCLKIN(),
-    .SSPFSSIN(),
-    .SSPRXD(),
-    .TxData(),
-    .TxValidWord(),
-    .TxNextWord(),
-    .RxData(),
-    .RxNextWord(),
-    .SSPCLKOUT(),
-    .SSPFSSOUT(),
-    .SSPTXD(),
-    .SSPOE_B()
+    .PCLK( PCLK ),
+    .CLEAR_B( CLEAR_B ),
+    .SSPCLKIN( SSPCLKIN ),
+    .SSPFSSIN( SSPFSSIN ),
+    .SSPRXD( SSPRXD ),
+    .TxData( TxData ),
+    .TxValidWord( TxValidWord ),
+    .TxNextWord( TxNextWord ),
+    .RxData( RxData ),
+    .RxNextWord( RxNextWord ),
+    .SSPCLKOUT( SSPCLKOUT ),
+    .SSPFSSOUT( SSPFSSOUT ),
+    .SSPTXD( SSPTXD ),
+    .SSPOE_B( SSPOE_B )
   );
 
 endmodule
