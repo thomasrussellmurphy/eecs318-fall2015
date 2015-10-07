@@ -13,7 +13,7 @@
 module rx_fifo
        (
          input PCLK,
-         input CLEAR_B, PSEL, PWRITE
+         input CLEAR_B, PSEL, PWRITE,
          input [ 7: 0 ] RxData,
          input NextWord,
          output [ 7: 0 ] PRDATA,

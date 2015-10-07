@@ -24,8 +24,8 @@ module ssp_tx_rx (
          input TxValidWord,
          output TxNextWord,
          output [ 7: 0 ] RxData,
-         output RxNextWord
-         output SSPCLKOUT, SSPFSSOUT, SSPTXD, SSPOE_B,
+         output RxNextWord,
+         output SSPCLKOUT, SSPFSSOUT, SSPTXD, SSPOE_B
        );
 
 endmodule

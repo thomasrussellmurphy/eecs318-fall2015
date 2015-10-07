@@ -16,7 +16,48 @@ module ssp (
 
 
 // Instance rx_fifo
+rx_fifo
+  (
+    .PCLK(),
+    .CLEAR_B(),
+    .PSEL(),
+    .PWRITE(),
+    .RxData(),
+    .NextWord(),
+    .PRDATA(),
+    .SSPRXINTR()
+  );
+
 // Instance tx_fifo
+rx_fifo
+  (
+    .PCLK(),
+    .CLEAR_B(),
+    .PSEL(),
+    .PWRITE(),
+    .PWDATA(),
+    .NextWord(),
+    .ValidWord(),
+    .TxData(),
+    .SSPTXINTR()
+  );
+
 // Instance ssp_tx_rx
+ssp_tx_rx (
+    .PCLK(),
+    .CLEAR_B(),
+    .SSPCLKIN(),
+    .SSPFSSIN(),
+    .SSPRXD(),
+    .TxData(),
+    .TxValidWord(),
+    .TxNextWord(),
+    .RxData(),
+    .RxNextWord(),
+    .SSPCLKOUT(),
+    .SSPFSSOUT(),
+    .SSPTXD(),
+    .SSPOE_B()
+  );
 
 endmodule
