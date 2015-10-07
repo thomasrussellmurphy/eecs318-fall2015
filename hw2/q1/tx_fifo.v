@@ -10,7 +10,7 @@
 
 `timescale 1 ns / 10 ps
 
-module rx_fifo
+module tx_fifo
        (
          input PCLK,
          input CLEAR_B, PSEL, PWRITE,
