@@ -15,7 +15,7 @@ module ssp (
        );
 
 // Interfaces to FIFOs
-wire RxNextWord, TxValidWord, TxNextWord;
+wire RxNextWord, TxValidWord, TxNextWord, TxIsEmpty;
 wire [ 7: 0 ] RxData, TxData;
 
 // Instance rx_fifo
@@ -41,6 +41,7 @@ tx_fifo
     .PWDATA( PWDATA ),
     .NextWord( TxNextWord ),
     .ValidWord( TxValidWord ),
+    .IsEmpty( TxIsEmpty ),
     .TxData( TxData ),
     .SSPTXINTR( SSPTXINTR )
   );
@@ -55,6 +56,7 @@ ssp_tx_rx (
     .TxData( TxData ),
     .TxValidWord( TxValidWord ),
     .TxNextWord( TxNextWord ),
+    .TxIsEmpty( TxIsEmpty ),
     .RxData( RxData ),
     .RxNextWord( RxNextWord ),
     .SSPCLKOUT( SSPCLKOUT ),

@@ -21,7 +21,7 @@ module ssp_tx_rx (
          input CLEAR_B,
          input SSPCLKIN, SSPFSSIN, SSPRXD,
          input [ 7: 0 ] TxData,
-         input TxValidWord,
+         input TxValidWord, TxIsEmpty,
          output TxNextWord,
          output [ 7: 0 ] RxData,
          output RxNextWord,

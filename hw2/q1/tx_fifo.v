@@ -6,7 +6,7 @@
 // CLEAR_B, PSEL, PWRITE, PWDATA, SSPTXINTR
 
 // SSP interface logic uses:
-// NextWord, VaildWord, RxData
+// NextWord, VaildWord, IsEmpty, RxData
 
 `timescale 1 ns / 10 ps
 
@@ -16,7 +16,7 @@ module tx_fifo
          input CLEAR_B, PSEL, PWRITE,
          input [ 7: 0 ] PWDATA,
          input NextWord,
-         output ValidWord,
+         output ValidWord, IsEmpty
          output [ 7: 0 ] TxData,
          output SSPTXINTR
        );
