@@ -21,7 +21,7 @@ module rx_fifo
        );
 
 // Four-element byte memory for FIFO
-reg [ 7: 0 ] memory [ 1: 0 ];
+reg [ 7: 0 ] memory [ 3: 0 ];
 // For the reset logic
 integer i;
 
@@ -32,7 +32,7 @@ reg [ 1: 0 ] FIFO_head, FIFO_tail;
 reg FIFO_full;
 
 // Export value of fullness
-assign SSPRXINTER = FIFO_full;
+assign SSPRXINTR = FIFO_full;
 
 // Check state of the FIFO addresses
 wire FIFO_almost_full = ( FIFO_head == FIFO_tail + 2'b1 );
@@ -45,12 +45,12 @@ wire P_reading = PSEL && ~PWRITE;
 assign PRDATA = memory[ FIFO_head ];
 
 always @( posedge PCLK ) begin
-  if ( CLEAR_B )
+  if ( ~CLEAR_B )
   begin
-    // Reset logic
+    // Reset logic from active-low signal
     FIFO_head <= 2'b0;
     FIFO_tail <= 2'b0;
-    FIFO_full = 1'b0;
+    FIFO_full <= 1'b0;
 
     for ( i = 0; i < 4; i = i + 1 )
     begin
@@ -88,7 +88,7 @@ always @( posedge PCLK ) begin
         FIFO_head <= FIFO_head;
         FIFO_tail <= FIFO_tail + 2'b1;
         FIFO_full <= FIFO_almost_full;
-        memory[ FIFO_tail ] <= NextWord;
+        memory[ FIFO_tail ] <= RxData;
       end
     end else
     begin

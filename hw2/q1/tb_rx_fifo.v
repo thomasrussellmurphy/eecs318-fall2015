@@ -62,6 +62,24 @@ begin
 
   #400;
 
+  next_word = 1'b1;
+  rx_data = 8'hC5;
+  #40;
+  next_word = 1'b0;
+
+  #400;
+
+  // Now reading out some of the data
+  psel = 1'b1;
+  pwrite = 1'b0;
+  #120;
+
+  psel = 1'b0;
+
+  #400;
+
+  $stop;
+
 end
 
 always
