@@ -16,7 +16,7 @@ module tx_fifo
          input CLEAR_B, PSEL, PWRITE,
          input [ 7: 0 ] PWDATA,
          input NextWord,
-         output ValidWord, IsEmpty
+         output ValidWord, IsEmpty,
          output [ 7: 0 ] TxData,
          output SSPTXINTR
        );
