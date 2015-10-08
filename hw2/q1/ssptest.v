@@ -41,6 +41,10 @@ begin
   #40 data_in = 8'b10110001; // 8'bB1
   #40 data_in = 8'b01010101; // 8'b55
 
+  #4000;
+
+  $stop;
+
 end
 
 always
@@ -102,6 +106,11 @@ begin
   #40 psel = 1'b0;
   #3600 pwrite = 1'b0;
   psel = 1'b1;
+
+  #40;
+
+  $stop;
+
 end
 
 always
