@@ -23,4 +23,6 @@ clean:
 # Settings copied from my style-verilog.sh
 style:
 	iStyle --indent=spaces=2 --convert-tabs --suffix=".old~" --pad=all */*.v
+	sed 's/last_compile [0-9]*/last_compile 0/' hw2.mpf >hw2.mpf.temp
+	mv hw2.mpf.temp hw2.mpf
 	echo 'you should probably run `make clean`'
