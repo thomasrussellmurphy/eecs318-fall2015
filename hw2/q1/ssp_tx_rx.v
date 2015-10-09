@@ -66,9 +66,11 @@ assign SSPFSSOUT = tx_loading;
 
 // State change
 always @( posedge PCLK ) begin
-  if(CLEAR_B) begin
+  if ( ~CLEAR_B )
+  begin
     tx_state <= tx_idle;
-  end else begin
+  end else
+  begin
     tx_state <= tx_next_state;
   end
 end
@@ -184,9 +186,11 @@ wire SSPCLKIN_rise = ~SSPCLKIN_prev && SSPCLKIN;
 
 // State change
 always @( posedge PCLK ) begin
-  if(CLEAR_B) begin
+  if ( ~CLEAR_B )
+  begin
     rx_state <= rx_idle;
-  end else begin
+  end else
+  begin
     rx_state <= rx_next_state;
   end
 end
