@@ -64,10 +64,8 @@ assign TxNextWord = TxNextWord_lcl;
 assign SSPOE_B = SSPOE_B_lcl;
 assign SSPFSSOUT = tx_loading;
 
-always @( posedge PCLK ) begin
-  // State change
-  tx_state <= tx_next_state;
-end
+// State change
+always @( posedge PCLK ) tx_state <= tx_next_state;
 
 always @( * ) begin
   // Manage transmit state machine
@@ -154,9 +152,100 @@ always @( posedge PCLK ) begin
 end
 
 // Receive operation
-reg [ 7: 0 ] shift_in;
+reg [ 7: 0 ] shift_in = 8'b0;
+reg RxNextWord_lcl;
+reg SSPCLKIN_prev;
+reg [ 3: 0 ] rx_state, rx_next_state;
+parameter
+  rx_idle = 4'd0,
+  rx_shift7 = 4'd1,
+  rx_shift6 = 4'd2,
+  rx_shift5 = 4'd3,
+  rx_shift4 = 4'd4,
+  rx_shift3 = 4'd5,
+  rx_shift2 = 4'd6,
+  rx_shift1 = 4'd7,
+  rx_shift0 = 4'd8;
 
+assign RxData = shift_in;
+assign RxNextWord = RxNextWord_lcl;
 
+// Recording history of the SSPCLKIN
+always @( posedge PCLK ) SSPCLKIN_prev <= SSPCLKIN;
+
+wire SSPCLKIN_fall = SSPCLKIN_prev && ~SSPCLKIN;
+wire SSPCLKIN_rise = ~SSPCLKIN_prev && SSPCLKIN;
+
+// State change
+always @( posedge PCLK ) rx_state <= rx_next_state;
+
+always @( * ) begin
+  // Manage the receive state machine
+  if ( SSPCLKIN_fall )
+  begin
+    case ( rx_state )
+      rx_idle:
+        // Start receive process by starting to receive data
+        if ( SSPFSSIN )
+        begin
+          rx_next_state <= rx_shift7;
+        end else
+        begin
+          rx_next_state <= rx_idle;
+        end
+      rx_shift7:
+        rx_next_state <= rx_shift6;
+      rx_shift6:
+        rx_next_state <= rx_shift5;
+      rx_shift5:
+        rx_next_state <= rx_shift4;
+      rx_shift4:
+        rx_next_state <= rx_shift3;
+      rx_shift3:
+        rx_next_state <= rx_shift2;
+      rx_shift2:
+        rx_next_state <= rx_shift1;
+      rx_shift1:
+        rx_next_state <= rx_shift0;
+      rx_shift0:
+        // Time to continue the transaction?
+        if ( SSPFSSIN )
+        begin
+          rx_next_state <= rx_shift7;
+        end else
+        begin
+          rx_next_state <= rx_idle;
+        end
+      default:
+        rx_next_state <= rx_idle;
+    endcase
+  end else
+  begin
+    rx_next_state <= rx_state;
+  end
+end
+
+always @( posedge PCLK ) begin
+  // Pretty simple shift register management
+  if ( SSPCLKIN_fall )
+  begin
+    shift_in <= { shift_in[ 6: 0 ], SSPRXD };
+  end else
+  begin
+    shift_in <= shift_in;
+  end
+end
+
+always @( posedge PCLK ) begin
+  // Control the receive FIFO
+  if ( ( rx_state == rx_shift0 ) && SSPCLKIN_rise )
+  begin
+    RxNextWord_lcl <= 1'b1;
+  end else
+  begin
+    RxNextWord_lcl <= 1'b0;
+  end
+end
 
 endmodule
 
