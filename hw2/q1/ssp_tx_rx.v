@@ -65,7 +65,13 @@ assign SSPOE_B = SSPOE_B_lcl;
 assign SSPFSSOUT = tx_loading;
 
 // State change
-always @( posedge PCLK ) tx_state <= tx_next_state;
+always @( posedge PCLK ) begin
+  if(CLEAR_B) begin
+    tx_state <= tx_idle;
+  end else begin
+    tx_state <= tx_next_state;
+  end
+end
 
 always @( * ) begin
   // Manage transmit state machine
@@ -177,7 +183,13 @@ wire SSPCLKIN_fall = SSPCLKIN_prev && ~SSPCLKIN;
 wire SSPCLKIN_rise = ~SSPCLKIN_prev && SSPCLKIN;
 
 // State change
-always @( posedge PCLK ) rx_state <= rx_next_state;
+always @( posedge PCLK ) begin
+  if(CLEAR_B) begin
+    rx_state <= rx_idle;
+  end else begin
+    rx_state <= rx_next_state;
+  end
+end
 
 always @( * ) begin
   // Manage the receive state machine
