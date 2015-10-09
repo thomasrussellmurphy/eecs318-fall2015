@@ -57,10 +57,11 @@ parameter
   tx_shift0 = 4'd9,
   tx_shift0_load = 4'd10;
 
+wire tx_loading = ( tx_state == tx_load ) || ( tx_state == tx_shift0_load );
+
 assign SSPTXD = shift_out[ 7 ];
 assign TxNextWord = TxNextWord_lcl;
-
-wire tx_loading = ( tx_state == tx_load ) || ( tx_state == tx_shift0_load );
+assign SSPFSSOUT = tx_loading;
 
 always @( posedge PCLK ) begin
   // State change
