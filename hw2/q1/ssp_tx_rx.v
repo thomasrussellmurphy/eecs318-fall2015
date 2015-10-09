@@ -61,6 +61,7 @@ wire tx_loading = ( tx_state == tx_load ) || ( tx_state == tx_shift0_load );
 
 assign SSPTXD = shift_out[ 7 ];
 assign TxNextWord = TxNextWord_lcl;
+assign SSPOE_B = SSPOE_B_lcl;
 assign SSPFSSOUT = tx_loading;
 
 always @( posedge PCLK ) begin
@@ -139,6 +140,18 @@ always @( * ) begin
   TxNextWord_lcl <= update_state && tx_loading ;
 end
 
+always @( posedge PCLK ) begin
+  if ( tx_loading && pre_update_state )
+  begin
+    SSPOE_B_lcl <= 1'b0;
+  end else if ( ( tx_state == tx_idle ) && pre_update_state )
+  begin
+    SSPOE_B_lcl <= 1'b1;
+  end else
+  begin
+    SSPOE_B_lcl <= SSPOE_B_lcl;
+  end
+end
 
 // Receive operation
 reg [ 7: 0 ] shift_in;
