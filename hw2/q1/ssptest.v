@@ -77,7 +77,7 @@ endmodule
 reg clock, clear_b, pwrite, psel;
 reg [ 7: 0 ] data_in;
 wire [ 7: 0 ] data_out;
-wire sspoe_b, tx_to_rx, clk_wire, fss_wire, ssptxintr, ssprxintr, oe_b;
+wire sspoe_b, tx_to_rx, clk_wire, fss_wire, ssptxintr, ssprxintr;
 
 initial
 begin
@@ -131,7 +131,7 @@ ssp ssp2 (
       .SSPCLKOUT( clk_wire ),
       .SSPFSSOUT( fss_wire ),
       .SSPTXD( tx_to_rx ),
-      .SSPOE_B( oe_b ),
+      .SSPOE_B( sspoe_b ),
       .SSPTXINTR( ssptxintr ),
       .SSPRXINTR( ssprxintr )
     );
