@@ -2,6 +2,8 @@
 // EECS 318 Fall 2015
 // Operating the simple processor for hw2 q3
 
+`timescale 1 ns / 10 ps
+
 module tb_processor_q2;
 
 reg processor_clk = 1'b0;

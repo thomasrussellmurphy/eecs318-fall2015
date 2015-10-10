@@ -25,6 +25,8 @@
   [4] zero
 */
 
+`timescale 1 ns / 10 ps
+
 module processor
        #(
          parameter memory_file = 1
