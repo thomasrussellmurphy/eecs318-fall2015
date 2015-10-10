@@ -4,8 +4,8 @@
 
 // Data segment
 // Program segment
-@ 100  // Starts at 12'h100
+@100  // Starts at 12'h100
 
-@ FFF  // Skip to the end of the memory
+@FFF  // Skip to the end of the memory
 // Just run the halt instruction at the end
 1000_0000_0000_0000_0000_0000_0000_0000

@@ -68,24 +68,32 @@ reg [ 11: 0 ] program_counter;
 
 reg [ 31: 0 ] instruction_register;
 
+integer i_clearing;
+
 initial
 begin
   // Arbitrary start of the program counter in memory
-  program_counter <= 12'h100;
+  program_counter = 12'h100;
 
+  // Zeroize the memory
+  for( i_clearing = 0; i_clearing < 4096; i_clearing = i_clearing + 1) begin
+    mem[i_clearing] = 32'b0;
+  end
+
+  // Then load in the data
   if ( memory_file == 1 )
   begin
-    $readmemh( "memory1.list", mem );
+    $readmemb( "memory1.list", mem );
   end else
   begin
-    $readmemh( "memory0.list", mem );
+    $readmemb( "memory0.list", mem );
   end
 end
 
 
 always @( posedge clk ) begin
   // Time to do an impossibly long set of blocking things in the processor
-
+  $stop;
 end
 
 endmodule
