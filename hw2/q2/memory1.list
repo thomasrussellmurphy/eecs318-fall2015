@@ -1,0 +1,13 @@
+// Thomas Russell Murphy (trm70)
+// EECS 318 Fall 2015
+// Program and data for hw2, q2 testing implementation
+
+// Data segment
+// At memory location zero we have the value 32'd6
+0000_0000_0000_0000_0000_0000_0000_0110
+
+// Program segment
+@ 100  // Starts at 12'h100
+
+// Program for calculating two's complement of value at mem[0] and storing
+// it at mem[1]

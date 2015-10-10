@@ -1,0 +1,11 @@
+// Thomas Russell Murphy (trm70)
+// EECS 318 Fall 2015
+// Program and data for default on processor
+
+// Data segment
+// Program segment
+@ 100  // Starts at 12'h100
+
+@ FFF  // Skip to the end of the memory
+// Just run the halt instruction at the end
+1000_0000_0000_0000_0000_0000_0000_0000
