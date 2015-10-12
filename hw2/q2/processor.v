@@ -68,7 +68,28 @@ reg [ 31: 0 ] processor_registers [ 15: 0 ];
 // Our program counter, the address of the instruction being used
 reg [ 11: 0 ] program_counter;
 
+// Copy of current instruction is loaded here
 reg [ 31: 0 ] instruction_register;
+
+// Breaking down the IR into names
+wire [ 3: 0 ] instruction_opcode, instruction_conditioncode;
+wire instruction_source, instruction_destination;
+wire [ 11: 0 ] source_count, destination;
+
+assign
+  instruction_opcode = instruction_register[ 31: 28 ],
+  instruction_conditioncode = instruction_register[ 27: 24 ],
+  instruction_source = instruction_register[ 27 ],
+  instruction_destination = instruction_register[ 26 ],
+  source_count = instruction_register[ 23: 12 ],
+  destination = instruction_register[ 11: 0 ];
+
+// Processor Status Register
+reg [ 4: 0 ] processor_sr;
+
+// Producing results
+reg [ 31: 0 ] free_operand, result;
+reg carry;
 
 integer i_clearing;
 
@@ -78,24 +99,134 @@ begin
   program_counter = 12'h100;
 
   // Zeroize the memory
-  for( i_clearing = 0; i_clearing < 4096; i_clearing = i_clearing + 1) begin
-    mem[i_clearing] = 32'b0;
+  for ( i_clearing = 0; i_clearing < 4096; i_clearing = i_clearing + 1 )
+  begin
+    mem[ i_clearing ] = 32'b0;
   end
 
   // Then load in the data
-  if ( memory_file == 1 )
-  begin
-    $readmemb( "memory1.list", mem );
-  end else
-  begin
-    $readmemb( "memory0.list", mem );
-  end
+  case ( memory_file )
+    1:
+      $readmemb( "memory1.list", mem );
+    default:
+      $readmemb( "memory0.list", mem );
+  endcase
 end
 
 
 always @( posedge clk ) begin
   // Time to do an impossibly long set of blocking things in the processor
-  $stop;
+
+  // Fetch
+  instruction_register = mem[ program_counter ];
+
+  // Decode and execute all simulation-like
+  case ( instruction_register[ 31: 28 ] )
+    op_NOP:
+      ; // Yup, nothing
+    op_LD:
+    begin
+      result = mem[ source_count ];
+      carry = 1'b0;
+      store_result;
+      set_PSR;
+    end
+    op_STR:
+      ;
+    op_BRA:
+    case ( instruction_register[ 27: 24 ] )
+      cc_A:
+        // Always [load jump target]
+        ;
+      cc_P:
+        // If parity bit
+        ;
+      cc_E:
+        // If even bit
+        ;
+      cc_C:
+        // If carry bit
+        ;
+      cc_N:
+        // If negative bit
+        ;
+      cc_Z:
+        // If zero bit
+        ;
+      cc_NC:
+        // If not carry
+        ;
+      cc_PO:
+        // If positive
+        ;
+      default:
+        ;
+    endcase
+    op_XOR:
+      ;
+    op_ADD:
+      ;
+    op_ROT:
+      ;
+    op_SHF:
+      ;
+    op_HLT:
+      $stop;
+    op_CMP:
+      ;
+    default:
+      ;
+  endcase
+
+  // Continue
+  program_counter = program_counter + 12'b1;
 end
+
+task get_operand;
+  begin
+    // Used by XOR, ADD, ROTATE, SHIFT, COMPLEMENT
+    if ( instruction_source )
+    begin
+      // Loading immediate value, sign extended
+      free_operand = { 20{ source_count[ 11 ] }, source_count };
+    end else
+    begin
+      free_operand = mem[ source_count[ 3: 0 ] ];
+    end
+  end
+endtask
+
+task get_shift_amount;
+  begin
+    free_operand = source_count[ 4: 0 ];
+  end
+endtask
+
+task store_result;
+  begin
+    mem[ destination[ 3: 0 ] ] = result;
+  end
+endtask
+
+task set_PSR;
+  begin
+    // Carry flag
+    processor_sr[ 0 ] = carry;
+    // Parity flag (reduction XOR)
+    processor_sr[ 1 ] = ^~result;
+    // Even flag (get LSB)
+    processor_sr[ 2 ] = result[ 0 ];
+    // Negative flag (get MSB)
+    processor_sr[ 3 ] = result[ 31 ];
+    // Zero flag (reduction AND)
+    processor_sr[ 4 ] = & result;
+  end
+endtask
+
+task clear_PSR;
+  begin
+    processor_sr = 5'b0;
+  end
+endtask
 
 endmodule
