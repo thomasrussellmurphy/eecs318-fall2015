@@ -229,9 +229,9 @@ task set_PSR;
     // Carry flag
     processor_sr[ 0 ] = carry;
     // Parity flag (reduction XOR)
-    processor_sr[ 1 ] = ^~result;
+    processor_sr[ 1 ] = ^ result;
     // Even flag (get LSB)
-    processor_sr[ 2 ] = result[ 0 ];
+    processor_sr[ 2 ] = ~result[ 0 ];
     // Negative flag (get MSB)
     processor_sr[ 3 ] = result[ 31 ];
     // Zero flag (reduction AND)
