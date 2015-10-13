@@ -5,7 +5,7 @@
 /*
   Processor instruction_register format
   32-bit instruction word
-
+ 
   [31:28] 4-bit Opcode
   [27:24] 4-bit Condition Code (BRANCH only)
   [27] 1-bit source type flag
@@ -111,6 +111,21 @@ begin
     default:
       $readmemb( "memory0.list", mem );
   endcase
+
+  // Clear all of our other registers
+  for ( i_clearing = 0; i_clearing < 16; i_clearing = i_clearing + 1 )
+  begin
+    processor_registers[ i_clearing ] = 32'b0;
+  end
+
+  instruction_register = 32'b0;
+  processor_sr = 5'b0;
+  free_operand = 32'b0;
+  result = 32'b0;
+  carry = 1'b0;
+
+  // Finally, set the program counter to the top of the program memory
+  program_counter = 12'h100;
 end
 
 
@@ -188,10 +203,11 @@ task get_operand;
     if ( instruction_source )
     begin
       // Loading immediate value, sign extended
-      free_operand = { 20{ source_count[ 11 ] }, source_count };
+      free_operand = { { 20{ source_count[ 11 ] } }, source_count };
     end else
     begin
-      free_operand = mem[ source_count[ 3: 0 ] ];
+      // Loading from a register
+      free_operand = processor_registers[ source_count[ 3: 0 ] ];
     end
   end
 endtask
@@ -204,7 +220,7 @@ endtask
 
 task store_result;
   begin
-    mem[ destination[ 3: 0 ] ] = result;
+    processor_registers[ destination[ 3: 0 ] ] = result;
   end
 endtask
 
