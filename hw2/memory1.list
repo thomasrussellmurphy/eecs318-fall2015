@@ -6,9 +6,6 @@
 // At memory location zero we have the value 32'd6
 0000_0000_0000_0000_0000_0000_0000_0110
 
-@6
-// For good measure, stick something else out here
-0000_0000_0000_1100_0000_0000_1011_0011
 
 // Program segment
 @100  // Starts at 12'h100
@@ -16,24 +13,21 @@
 // Program for calculating two's complement of value at mem[0] and storing
 // it at mem[1]
 
-// Load value at memory zero into register zero
+// Load value at memory 0x000 into register 0x1
 // LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
-0001_0000_0000_0000_0000_0000_0000_0000
+0001_0000_0000_0000_0000_0000_0000_0001
 
-// LD _ no CC or src/dest _ (3) source 0x6 _ (3) address 0x6
-0001_0000_0000_0000_0110_0000_0000_0110
+// Complement value at register 0x1 into register 0x2
+1001_0000_0000_0000_0001_0000_0000_0010
 
-// Store value at register zero into memory 0000_000_0011
-// STR _ no CC or src/dest _ (3) address zero _ (3) address 0x11
-0010_0000_0000_0000_0000_0000_0000_0011
+// Add immediate value of 1 to value in register 0x2
+0101_1000_0000_0000_0001_0000_0000_0010
 
-// XOR register 0x6 with 0x0 into 0x0
-0100_0000_0000_0000_0110_0000_0000_0000
+// This completes the usual complement-and-add-one inversion
 
-// NOPs with addresses
-0000_0000_0000_0000_0000_0000_1011_0000
-0000_0000_0000_0000_0011_0000_0000_0000
-0000_0000_0000_0110_0000_0000_0000_0001
+// Store value at register 0x2 into memory 0x001
+// STR _ no CC or src/dest _ (3) address 0x2 _ (3) address 0x001
+0010_0000_0000_0000_0010_0000_0000_0001
 
 // Halt
 1000_0000_0000_0000_0000_0000_0000_0000
