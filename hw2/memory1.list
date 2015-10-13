@@ -12,5 +12,14 @@
 // Program for calculating two's complement of value at mem[0] and storing
 // it at mem[1]
 
+// Load value at memory zero into register zero
+// LD _ no CC or src/dest _ (3) address zero _ (3) address zero
+0001_0000_0000_0000_0000_0000_0000_0000
+
+// NOPs with addresses
+0000_0000_0000_0000_0000_0000_1011_0000
+0000_0000_0000_0000_0011_0000_0000_0000
+0000_0000_0000_0110_0000_0000_0000_0001
+
 // Halt
 1000_0000_0000_0000_0000_0000_0000_0000
