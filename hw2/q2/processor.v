@@ -207,7 +207,11 @@ always @( posedge clk ) begin
       store_result;
     end
     default:
-      ;
+    begin
+      $print( "Error! Default case found, invalid opcode used." );
+      @( posedge clk );
+      $stop;
+    end
   endcase
 
   // Continue
