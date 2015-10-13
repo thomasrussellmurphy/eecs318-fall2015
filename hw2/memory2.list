@@ -13,11 +13,42 @@
 // Program for calculating the number of ones in the value at mem[0] and storing
 // the count at mem[1]
 
-// Load value at memory 0x000 into register 0x1
+// Load value at memory 0x000 into register 0x1 (value to count ones of)
 // LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
 0001_0000_0000_0000_0000_0000_0000_0001
 
+// Add immediate value 32 into register 0x0 for loop counter
+0101_1000_0000_0010_0000_0000_0000_0000
 
+// Setup external loop
+@102  // Reference for this jump point
+// If zero, jump to end
+0011_0101_0000_0000_0000_0001_1111_1111
+// else, jump to the ones-counter loop
+0011_0000_0000_0000_0000_0001_0000_1111
 
+// Setup internal loop
+@110  // Reference for this jump point
+
+// Add immediate value 0 into register 0x1 to check state
+0101_1000_0000_0000_0000_0000_0000_0000
+
+// If even (no 1 in LSB), jump to shift
+// 0011
+
+// Fall through since there'd be a 1 in the LSB
+// Adding 1 to ones count
+// 0101
+
+// Shifting right by 1 to get the next LSB
+// 0111
+
+// Add immediate value -1 to register 0x0 for loop counter
+0101_1000_1111_1111_1111_0000_0000_0000
+
+// Jump to external loop start
+0011_0000_0000_0000_0000_0001_0000_0001
+
+@200  // reference for this jump point
 // Halt
 1000_0000_0000_0000_0000_0000_0000_0000

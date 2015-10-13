@@ -5,7 +5,7 @@
 /*
   Processor instruction_register format
   32-bit instruction word
-
+ 
   [31:28] 4-bit Opcode
   [27:24] 4-bit Condition Code (BRANCH only)
   [27] 1-bit source type flag
@@ -152,28 +152,49 @@ always @( posedge clk ) begin
     case ( instruction_conditioncode )
       cc_A:
         // Always [load jump target]
-        ;
+        program_counter = destination;
       cc_P:
         // If parity bit
-        ;
+        if ( processor_sr[ 1 ] )
+        begin
+          program_counter = destination;
+        end
       cc_E:
         // If even bit
-        ;
+        if ( processor_sr[ 2 ] )
+        begin
+          program_counter = destination;
+        end
       cc_C:
         // If carry bit
-        ;
+        if ( processor_sr[ 0 ] )
+        begin
+          program_counter = destination;
+        end
       cc_N:
         // If negative bit
-        ;
+        if ( processor_sr[ 3 ] )
+        begin
+          program_counter = destination;
+        end
       cc_Z:
         // If zero bit
-        ;
+        if ( processor_sr[ 4 ] )
+        begin
+          program_counter = destination;
+        end
       cc_NC:
         // If not carry
-        ;
+        if ( ~processor_sr[ 0 ] )
+        begin
+          program_counter = destination;
+        end
       cc_PO:
-        // If positive
-        ;
+        // If positive [not-negative, not-zero]
+        if ( ~processor_sr[ 3 ] && ~processor_sr[ 4 ] )
+        begin
+          program_counter = destination;
+        end
       default:
         ;
     endcase
@@ -212,7 +233,7 @@ always @( posedge clk ) begin
     end
     default:
     begin
-      $print( "Error! Default case found, invalid opcode used." );
+      $display( "Error! Default case found, invalid opcode used." );
       @( posedge clk );
       $stop;
     end

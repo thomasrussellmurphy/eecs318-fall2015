@@ -14,9 +14,13 @@
 
 // Program for calculating the product of the values at mem[0] and mem[1]
 
-// Load value at memory 0x000 into register 0x1
+// Load value at memory 0x000 into register 0x0
 // LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
-0001_0000_0000_0000_0000_0000_0000_0001
+0001_0000_0000_0000_0000_0000_0000_0000
+
+// Load value at memory 0x001 into register 0x1
+// LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
+0001_0000_0000_0000_0001_0000_0000_0001
 
 
 
