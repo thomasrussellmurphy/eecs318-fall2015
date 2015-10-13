@@ -196,7 +196,11 @@ always @( posedge clk ) begin
           program_counter = destination;
         end
       default:
-        ;
+      begin
+        $display( "Error! Default case found, invalid condition code used." );
+        @( posedge clk );
+        $stop;
+      end
     endcase
     op_XOR:
     begin
