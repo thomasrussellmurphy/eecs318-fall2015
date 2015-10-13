@@ -5,7 +5,7 @@
 /*
   Processor instruction_register format
   32-bit instruction word
- 
+
   [31:28] 4-bit Opcode
   [27:24] 4-bit Condition Code (BRANCH only)
   [27] 1-bit source type flag
@@ -176,7 +176,12 @@ always @( posedge clk ) begin
     op_XOR:
       ;
     op_ADD:
-      ;
+    begin
+      get_operand;
+      { carry, result } = free_operand + processor_registers[ destination[3:0] ];
+      set_PSR;
+      store_result;
+    end
     op_ROT:
       ;
     op_SHF:
