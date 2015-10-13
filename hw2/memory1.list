@@ -8,7 +8,7 @@
 
 @6
 // For good measure, stick something else out here
-0000_0000_0000_1100_0000_0000_1011_0001
+0000_0000_0000_1100_0000_0000_1011_0011
 
 // Program segment
 @100  // Starts at 12'h100
@@ -27,8 +27,8 @@
 // STR _ no CC or src/dest _ (3) address zero _ (3) address 0x11
 0010_0000_0000_0000_0000_0000_0000_0011
 
-// Invert register 0x6 into 0x1
-1001_0000_0000_0000_0110_0000_0000_0001
+// XOR register 0x6 with 0x0 into 0x0
+0100_0000_0000_0000_0110_0000_0000_0000
 
 // NOPs with addresses
 0000_0000_0000_0000_0000_0000_1011_0000

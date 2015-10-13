@@ -174,7 +174,13 @@ always @( posedge clk ) begin
         ;
     endcase
     op_XOR:
-      ;
+    begin
+      get_operand;
+      result = free_operand ^ processor_registers[ destination[ 3: 0 ] ];
+      carry = 1'b0;
+      set_PSR;
+      store_result;
+    end
     op_ADD:
     begin
       get_operand;
