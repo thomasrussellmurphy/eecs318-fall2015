@@ -223,13 +223,14 @@ always @( posedge clk ) begin
     begin
       // Have amount to shift in source_count
       carry = 1'b0;
-      if ( source_count > 0 )
+      if ( ~source_count[ 11 ] )
       begin
         // Shifting right
         result = processor_registers[ destination[ 3: 0 ] ] >> source_count;
       end else
       begin
-        // Shifting left
+        source_count = ~source_count + 1'b1;
+        // Shifting left with 2's complement conversion
         result = processor_registers[ destination[ 3: 0 ] ] << source_count;
       end
       set_PSR;
