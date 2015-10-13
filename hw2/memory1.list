@@ -27,8 +27,8 @@
 // STR _ no CC or src/dest _ (3) address zero _ (3) address 0x11
 0010_0000_0000_0000_0000_0000_0000_0011
 
-// Add together registers 0x00 and 0x06 into 0x00
-0101_0000_0000_0000_0110_0000_0000_0000
+// Invert register 0x6 into 0x1
+1001_0000_0000_0000_0110_0000_0000_0001
 
 // NOPs with addresses
 0000_0000_0000_0000_0000_0000_1011_0000
