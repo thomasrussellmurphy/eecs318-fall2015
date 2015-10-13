@@ -5,7 +5,7 @@
 /*
   Processor instruction_register format
   32-bit instruction word
- 
+
   [31:28] 4-bit Opcode
   [27:24] 4-bit Condition Code (BRANCH only)
   [27] 1-bit source type flag
@@ -100,6 +100,10 @@ begin
   case ( memory_file )
     1:
       $readmemb( "memory1.list", mem );
+    2:
+      $readmemb( "memory2.list", mem );
+    3:
+      $readmemb( "memory3.list", mem );
     default:
       $readmemb( "memory0.list", mem );
   endcase

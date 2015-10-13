@@ -1,5 +1,5 @@
 # Hi, this is something that resembles a makefile
-.PHONY: make_work all build1 build2 report clean style
+.PHONY: make_work all build1 build2 build3 build4 report clean style
 
 make_work:
 	-vlib work
@@ -13,6 +13,12 @@ build1:
 
 build2:
 	vlog -novopt q2/*.v
+
+build3: build2
+	vlog -novopt q3/*.v
+
+build4: build2
+	vlog -novopt q4/*.v
 
 report:
 	pdflatex hw2.tex

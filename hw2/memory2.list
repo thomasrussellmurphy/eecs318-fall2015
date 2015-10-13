@@ -1,0 +1,23 @@
+// Thomas Russell Murphy (trm70)
+// EECS 318 Fall 2015
+// Program and data for hw2, q3 testing implementation
+
+// Data segment
+// At memory location zero we have a randomly generated value
+0111_1001_0010_0101_1010_0111_0111_1100
+// It has 18 ones in it
+
+// Program segment
+@100  // Starts at 12'h100
+
+// Program for calculating the number of ones in the value at mem[0] and storing
+// the count at mem[1]
+
+// Load value at memory 0x000 into register 0x1
+// LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
+0001_0000_0000_0000_0000_0000_0000_0001
+
+
+
+// Halt
+1000_0000_0000_0000_0000_0000_0000_0000

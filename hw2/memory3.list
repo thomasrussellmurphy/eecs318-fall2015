@@ -1,0 +1,24 @@
+// Thomas Russell Murphy (trm70)
+// EECS 318 Fall 2015
+// Program and data for hw2, q4 testing implementation
+
+// Data segment
+// At memory location 0x000 we have a randomly generated value
+00001110_11010101_10100001_11111100
+
+// And again at 0x001
+00111110_11101111_00011001_01110011
+
+// Program segment
+@100  // Starts at 12'h100
+
+// Program for calculating the product of the values at mem[0] and mem[1]
+
+// Load value at memory 0x000 into register 0x1
+// LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
+0001_0000_0000_0000_0000_0000_0000_0001
+
+
+
+// Halt
+1000_0000_0000_0000_0000_0000_0000_0000
