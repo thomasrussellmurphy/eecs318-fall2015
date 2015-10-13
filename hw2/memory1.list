@@ -6,6 +6,10 @@
 // At memory location zero we have the value 32'd6
 0000_0000_0000_0000_0000_0000_0000_0110
 
+@6
+// For good measure, stick something else out here
+0000_0000_0000_1100_0000_0000_1011_0001
+
 // Program segment
 @100  // Starts at 12'h100
 
@@ -13,8 +17,15 @@
 // it at mem[1]
 
 // Load value at memory zero into register zero
-// LD _ no CC or src/dest _ (3) address zero _ (3) address zero
+// LD _ no CC or src/dest _ (3) source zero _ (3) destination zero
 0001_0000_0000_0000_0000_0000_0000_0000
+
+// LD _ no CC or src/dest _ (3) source 0x6 _ (3) address 0x6
+0001_0000_0000_0000_0110_0000_0000_0110
+
+// Store value at register zero into memory 0000_000_0011
+// STR _ no CC or src/dest _ (3) address zero _ (3) address 0x11
+0010_0000_0000_0000_0000_0000_0000_0011
 
 // NOPs with addresses
 0000_0000_0000_0000_0000_0000_1011_0000

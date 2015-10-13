@@ -72,17 +72,9 @@ reg [ 11: 0 ] program_counter;
 reg [ 31: 0 ] instruction_register;
 
 // Breaking down the IR into names
-wire [ 3: 0 ] instruction_opcode, instruction_conditioncode;
-wire instruction_source, instruction_destination;
-wire [ 11: 0 ] source_count, destination;
-
-assign
-  instruction_opcode = instruction_register[ 31: 28 ],
-  instruction_conditioncode = instruction_register[ 27: 24 ],
-  instruction_source = instruction_register[ 27 ],
-  instruction_destination = instruction_register[ 26 ],
-  source_count = instruction_register[ 23: 12 ],
-  destination = instruction_register[ 11: 0 ];
+reg [ 3: 0 ] instruction_opcode, instruction_conditioncode;
+reg instruction_source, instruction_destination;
+reg [ 11: 0 ] source_count, destination;
 
 // Processor Status Register
 reg [ 4: 0 ] processor_sr;
@@ -133,7 +125,7 @@ always @( posedge clk ) begin
   // Time to do an impossibly long set of blocking things in the processor
 
   // Fetch
-  instruction_register = mem[ program_counter ];
+  fetch_instruction;
 
   // Decode and execute all simulation-like
   case ( instruction_register[ 31: 28 ] )
@@ -147,9 +139,13 @@ always @( posedge clk ) begin
       set_PSR;
     end
     op_STR:
-      ;
+    begin
+      result = processor_registers[ source_count[ 3: 0 ] ];
+      clear_PSR;
+      mem[ destination ] = result;
+    end
     op_BRA:
-    case ( instruction_register[ 27: 24 ] )
+    case ( instruction_conditioncode )
       cc_A:
         // Always [load jump target]
         ;
@@ -186,7 +182,11 @@ always @( posedge clk ) begin
     op_SHF:
       ;
     op_HLT:
+    begin
+      // Stall a cycle and then halt to show what happens this cycle
+      @( posedge clk );
       $stop;
+    end
     op_CMP:
       ;
     default:
@@ -196,6 +196,21 @@ always @( posedge clk ) begin
   // Continue
   program_counter = program_counter + 12'b1;
 end
+
+task fetch_instruction;
+  begin
+    instruction_register = mem[ program_counter ];
+
+    // Redundancy because these need to be registers
+    // THANKS FOR THE COMPLEXITY, VERILOG >.>
+    instruction_opcode = instruction_register[ 31: 28 ];
+    instruction_conditioncode = instruction_register[ 27: 24 ];
+    instruction_source = instruction_register[ 27 ];
+    instruction_destination = instruction_register[ 26 ];
+    source_count = instruction_register[ 23: 12 ];
+    destination = instruction_register[ 11: 0 ];
+  end
+endtask
 
 task get_operand;
   begin
