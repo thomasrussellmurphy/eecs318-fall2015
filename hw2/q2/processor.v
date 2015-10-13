@@ -220,7 +220,21 @@ always @( posedge clk ) begin
     op_ROT:
       ;
     op_SHF:
-      ;
+    begin
+      // Have amount to shift in source_count
+      carry = 1'b0;
+      if ( source_count > 0 )
+      begin
+        // Shifting right
+        result = processor_registers[ destination[ 3: 0 ] ] >> source_count;
+      end else
+      begin
+        // Shifting left
+        result = processor_registers[ destination[ 3: 0 ] ] << source_count;
+      end
+      set_PSR;
+      store_result;
+    end
     op_HLT:
     begin
       // Stall a cycle and then halt to show what happens this cycle

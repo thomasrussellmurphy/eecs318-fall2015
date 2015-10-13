@@ -20,6 +20,8 @@
 // Add immediate value 32 into register 0x0 for loop counter
 0101_1000_0000_0010_0000_0000_0000_0000
 
+// Register 0x2 will be the count of ones
+
 // Setup external loop
 @102  // Reference for this jump point
 // If zero, jump to end
@@ -34,14 +36,18 @@
 0101_1000_0000_0000_0000_0000_0000_0000
 
 // If even (no 1 in LSB), jump to shift
-// 0011
+0011_0010_0000_0000_0000_0001_0001_1111
 
 // Fall through since there'd be a 1 in the LSB
 // Adding 1 to ones count
-// 0101
+0101_1000_0000_0000_0001_0000_0000_0010
+// Unconditional jump to shift
+0011_0010_0000_0000_0000_0001_0001_1111
 
-// Shifting right by 1 to get the next LSB
-// 0111
+// Shift here
+@120  // Reference for this jump point
+// Shifting register 0x1 right by 1 to get the next LSB
+0111_0000_0000_0000_0001_0000_0000_0001
 
 // Add immediate value -1 to register 0x0 for loop counter
 0101_1000_1111_1111_1111_0000_0000_0000
@@ -49,6 +55,11 @@
 // Jump to external loop start
 0011_0000_0000_0000_0000_0001_0000_0001
 
+// Write result and halt
 @200  // reference for this jump point
+
+// Store value at register 0x2 into memory 0x001
+0010_0000_0000_0000_0010_0000_0000_0001
+
 // Halt
 1000_0000_0000_0000_0000_0000_0000_0000
