@@ -1,10 +1,10 @@
 # Hi, this is something that resembles a makefile
-.PHONY: make_work all build1 build2 build3 build4 report clean style
+.PHONY: work all build1 build2 build3 build4 report clean style
 
-make_work:
+work:
 	-vlib work
 
-all: | make_work build_all
+all: | work build_all
 
 build_all: build1 build2
 
