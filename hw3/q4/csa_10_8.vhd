@@ -92,7 +92,7 @@ begin
     csa_abc: csa port map (
       x => a(index),
       y => b(index),
-      z => a(index),
+      z => c(index),
       c => c_abc(index),
       s => s_abc(index) );
 
@@ -137,7 +137,7 @@ begin
       s => s_csa2_b(index) );
     end generate layer_2;
 
-  -- Layer 3: consumes s_csa2_A, c_csa2_A, s_csa2_B, c_csa2_B, j
+  -- Layer 3: consumes s_csa2_a, c_csa2_a, s_csa2_b, c_csa2_b, j
   -- Widths are now 10
 
   s_csa2_a_w <= '0' & s_csa2_a;
@@ -162,7 +162,7 @@ begin
       s => s_csa3_b(index) );
   end generate layer_3;
 
-  -- Layer 4: consumes s_csa3_A, c_csa3_A, s_csa3_B
+  -- Layer 4: consumes s_csa3_a, c_csa3_a, s_csa3_b
   -- Widths are now 11
 
   s_csa3_a_w <= '0' & s_csa3_a;
@@ -178,18 +178,18 @@ begin
       s => s_csa4(index) );
   end generate layer_4;
 
-  -- Layer 5: consumes s_csa4, c_csa4, c_csa3_B
+  -- Layer 5: consumes s_csa4, c_csa4, c_csa3_b
   -- Widths are now 12
 
-  c_csa3_b_w <= '0' & c_csa3_b & '0';
   s_csa4_w <= '0' & s_csa4;
   c_csa4_w <= c_csa4 & '0';
+  c_csa3_b_w <= '0' & c_csa3_b & '0';
 
   layer_5: for index in 0 to 11 generate
     csa5: csa port map (
-      x => c_csa3_b_w(index),
-      y => s_csa4_w(index),
-      z => c_csa4_w(index),
+      x => s_csa4_w(index),
+      y => c_csa4_w(index),
+      z => c_csa3_b_w(index),
       c => c_csa5(index),
       s => s_csa5(index) );
   end generate layer_5;
