@@ -18,9 +18,9 @@ entity csa is
 end csa;
 
 architecture RTL of csa is
-  signal partial_sum : std_logic := '0';
-  signal sum : std_logic := '0';
-  signal carry : std_logic := '0';
+  signal partial_sum : std_logic;
+  signal sum : std_logic;
+  signal carry : std_logic;
 begin
 
   csa_output: process(x, y, z)
