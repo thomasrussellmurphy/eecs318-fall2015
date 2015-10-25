@@ -18,14 +18,14 @@ entity adder is
 end adder;
 
 architecture RTL of adder is
-  signal partial_sum : std_logic := '0';
-  signal sum : std_logic := '0';
-  signal carry : std_logic := '0';
+  signal sum : std_logic;
+  signal carry : std_logic;
 begin
 
-  adder_output: process(a, b, ci)
+  adder_output: process(a, b, ci) is
+    variable partial_sum : std_logic;
   begin
-    partial_sum <= a xor b;
+    partial_sum := a xor b;
     sum <= partial_sum xor ci;
 
     carry <= (partial_sum and ci) or (a and b);
