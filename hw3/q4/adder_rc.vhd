@@ -9,8 +9,7 @@ library IEEE;
 
 entity adder_rc is
   generic (
-    width : natural := 8
-   );
+    width : natural := 8 );
   port (
     a : in std_logic_vector(width-1 downto 0);
     b : in std_logic_vector(width-1 downto 0);
@@ -29,21 +28,18 @@ architecture RTL of adder_rc is
       b : in std_logic;
       ci : in std_logic;
       co : out std_logic;
-      s : out std_logic
-    );
+      s : out std_logic );
   end component;
 begin
 
   -- Generate the 'width' adders with connections
   adders: for i in width-1 downto 0 generate
-    adder_i : adder port map
-    (
+    adder_i: adder port map (
       a => a(i),
       b => b(i),
       ci => ci(i),
       co => co(i),
-      s => s_partial(i)
-    );
+      s => s_partial(i) );
   end generate adders;
 
   -- Pass information between adders and produce result
