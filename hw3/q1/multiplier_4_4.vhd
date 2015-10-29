@@ -66,7 +66,7 @@ begin
 
     msb: if y_index = 3 generate
       mult: unit_multiplier port map (
-        a => x(0),
+        a => x(1),
         b => y(y_index),
         si => '0',
         ci => carries_0(y_index),
@@ -88,7 +88,7 @@ begin
 
     msb: if y_index = 3 generate
       mult: unit_multiplier port map (
-        a => x(0),
+        a => x(2),
         b => y(y_index),
         si => '0',
         ci => carries_1(y_index),
@@ -110,7 +110,7 @@ begin
 
     msb: if y_index = 3 generate
       mult: unit_multiplier port map (
-        a => x(0),
+        a => x(3),
         b => y(y_index),
         si => '0',
         ci => carries_2(y_index),
@@ -143,7 +143,7 @@ begin
         a => '0',
         b => carries_3(y_index),
         ci => final_carry(y_index - 1),
-        co => open,
+        co => final_carry(y_index),
         s => final_sum(y_index) );
     end generate msb;
   end generate sum_row;
