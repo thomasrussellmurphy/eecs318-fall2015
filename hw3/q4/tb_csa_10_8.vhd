@@ -37,7 +37,6 @@ architecture test of tb_csa_10_8 is
     i : in std_logic_vector(7 downto 0);
     j : in std_logic_vector(7 downto 0);
     z : out std_logic_vector(11 downto 0) );
-
   end component;
 
   -- Constants
