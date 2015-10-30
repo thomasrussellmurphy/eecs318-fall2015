@@ -77,7 +77,7 @@ begin
         when s9 =>
           state <= s10;
         when s10 =>
-          state <= s10;
+          state <= s11;
         when s11 =>
           if s_a = '0' and s_b = '1' then
             -- Maintain active B direction
