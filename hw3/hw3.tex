@@ -1,0 +1,101 @@
+\documentclass[10pt]{article}
+
+\usepackage[psamsfonts]{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+
+\usepackage[left=2.35cm,top=2.45cm,bottom=2.45cm,right=2.35cm,letterpaper]{geometry}
+
+\usepackage{hyperref}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhf{}
+\fancyfoot[C,CO]{\thepage}
+\fancyhead[L,LO]{\bfseries EECS 318}
+\fancyhead[C,CO]{\bfseries Homework 3}
+\fancyhead[R,RO]{Fall 2015}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem*{solution}{Solution}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\labelenumi}{\textbf{(\alph{enumi})}}
+\renewcommand{\labelenumii}{\textbf{(\roman{enumii})}}
+
+\newcommand{\ds}{\displaystyle}
+
+\newcommand{\ttname}[1]{\texttt{\detokenize{#1}}}
+
+\parindent=0pt
+
+\begin{document}
+
+  \begin{center}
+  \section*{Homework 3}
+  \end{center}
+  Thomas Murphy (\textit{trm70})
+
+  \today
+
+  \bigskip
+
+  \begin{problem}
+    Unsigned Multiplier
+
+    The multiplier is implemented in the following modules:
+
+    \begin{itemize}
+      \item full adder: \ttname{q1/full_adder.vhd}
+      \item unit multiplier: \ttname{q1/unit_multiplier.vhd}
+      \item multiplier for 4x4-bit multiplication: \ttname{q1/multiplier_4_4.vhd}
+    \end{itemize}
+
+    The testbench for the multiplier is \ttname{q1/tb_multiplier_4_4.vhd}.
+
+  \end{problem}
+
+  \begin{problem}
+    Traffic Light State Machine
+
+    The state machine is implemented in \ttname{q2/traffic_light_sm.vhd}.
+
+    The testbench for the state machine is \ttname{q2/tb_traffic_light_sm.vhd}.
+
+  \end{problem}
+
+  \begin{problem}
+    Processor Cache
+
+    Not implemented. Start of code in \ttname{q3/cache.vhd}.
+  \end{problem}
+
+  \begin{problem}
+    Carry-Save Adder
+
+    The adder is implemented in the following modules:
+
+    \begin{itemize}
+      \item simple adder: \ttname{q4/adder.vhd}
+      \item generic-width ripple-carry adder: \ttname{q4/adder_rc.vhd}
+      \item carry-save adder element: \ttname{q4/csa.vhd}
+      \item complete CSA: \ttname{q4/csa_10_8.vhd}
+    \end{itemize}
+
+    The testbench for the adder is \ttname{q4/tb_csa_10_8.vhd}.
+
+  \end{problem}
+
+\end{document}
