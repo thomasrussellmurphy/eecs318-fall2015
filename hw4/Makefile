@@ -28,5 +28,5 @@ clean:
 
 # Does very little because there's no VHDL formatter I've found
 style:
-	sed 's/last_compile [0-9]*/last_compile 0/' hw3.mpf >hw3.mpf.temp
-	mv hw3.mpf.temp hw3.mpf
+	sed 's/last_compile [0-9]*/last_compile 0/' hw4.mpf >hw4.mpf.temp
+	mv hw4.mpf.temp hw4.mpf
