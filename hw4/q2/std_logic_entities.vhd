@@ -4,19 +4,19 @@
 --------------------------------   -----------------------------------------
 --
 -- Copyright (c) 1990, 1991, 1992 by Synopsys, Inc.  All rights reserved.
--- 
--- This source file may be used and distributed without restriction 
--- provided that this copyright statement is not removed from the file 
+--
+-- This source file may be used and distributed without restriction
+-- provided that this copyright statement is not removed from the file
 -- and that any derivative work contains this copyright notice.
 --
 --	File name: std_logic_entities.vhd
 --
---	Purpose: A set of models (entity/architecture pairs) for the 
+--	Purpose: A set of models (entity/architecture pairs) for the
 --	         primitives of IEEE Standard Logic library.
 --
 --	Author: JT, PH, GWH
 --
---	NOTE: 
+--	NOTE:
 --	      The component declarations for the entities in this
 --	      package appear in the package IEEE.STD_LOGIC_COMPONENTS
 --
@@ -731,10 +731,10 @@ end;
 --
 --	Primitive name: WBUFGATE
 --
---	Purpose: A BUFFER gate with TRANSPORT delay mode 
+--	Purpose: A BUFFER gate with TRANSPORT delay mode
 --	for multiple value logic STD_LOGIC, 1 input, 1 output.
 --
---	Note: in order to model a wire with delay, 
+--	Note: in order to model a wire with delay,
 --	      must set tLH and tHL to a same value.
 --
 ----------------------------------------------------------------------------
@@ -952,7 +952,7 @@ architecture A of BUF3S is
 	subtype TWOBIT is STD_LOGIC_VECTOR (0 to 1);
 
 begin
-	P: process 
+	P: process
 		variable nextstate: STD_LOGIC;
 		variable delta: Time;
 		variable next_assign_val: STD_LOGIC;
@@ -1037,7 +1037,7 @@ architecture A of BUF3SL is
 	subtype TWOBIT is STD_LOGIC_VECTOR (0 to 1);
 
 begin
-	P: process 
+	P: process
 		variable nextstate: STD_LOGIC;
 		variable delta: Time;
 		variable next_assign_val: STD_LOGIC;
@@ -1295,7 +1295,7 @@ begin
 		variable nextstate: STD_LOGIC;
 		variable delta: Time;
 		variable next_assign_val: STD_LOGIC;
-	begin 
+	begin
 	    -- evaluate logical function
 	    nextstate := fun_MUX2x1(To_UX01(In0), To_UX01(In1), To_UX01(Sel));
 
@@ -1368,7 +1368,7 @@ end;
 --		      -----------------------------------------------
 --		      ~ = not equal;    * = don't care;   NC = no change
 --		      0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		      X = 'X', 'W', 'Z', or '-'; 
+--		      X = 'X', 'W', 'Z', or '-';
 --		      (The truth table rows are in order of decreasing precedence)
 --
 --		      Clock transition definitions:
@@ -1387,8 +1387,8 @@ end;
 --			      else
 --				      Output := X;
 --
---		      Note 2: if ((Output already == Data) or 
---				  (Output already == U)) 
+--		      Note 2: if ((Output already == Data) or
+--				  (Output already == U))
 --				      (no change);
 --			      else if (Data == U)
 --			              Output := U;
@@ -1444,20 +1444,20 @@ begin
                 clock_flag := 0;	-- 0-Trns
     end if;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
         case Reset is
-            when 'U' => 
+            when 'U' =>
                 nextstate(i) :=  'U';
-            when '1' | 'H' => 
+            when '1' | 'H' =>
                 nextstate(i) :=  STRENGTH_MAP('0', strn);
             when '0' | 'L' =>
                 case clock_flag is
                     when 0 =>
                         exit;
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
                     when others =>	-- X-Trans
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					     or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -1502,7 +1502,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Clock, Reset;
@@ -1548,7 +1548,7 @@ end;
 --		      -----------------------------------------------
 --		      ~ = not equal;    * = don't care;   NC = no change
 --		      0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		      X = 'X', 'W', 'Z', or '-'; 
+--		      X = 'X', 'W', 'Z', or '-';
 --		      (The truth table rows are in order of decreasing precedence)
 --
 --		      Clock transition definitions:
@@ -1567,8 +1567,8 @@ end;
 --			      else
 --				      Output := X;
 --
---		      Note 2: if ((Output already == Data) or 
---				  (Output already == U)) 
+--		      Note 2: if ((Output already == Data) or
+--				  (Output already == U))
 --				      (no change);
 --			      else if (Data == U)
 --			              Output := U;
@@ -1623,20 +1623,20 @@ begin
                 clock_flag := 0;	-- 0-Trns
     end if;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
         case Reset is
-            when 'U' => 
+            when 'U' =>
                 nextstate(i) :=  'U';
             when '0' | 'L' =>
                 nextstate(i) :=  STRENGTH_MAP('0', strn);
-            when '1' | 'H' => 
+            when '1' | 'H' =>
                 case clock_flag is
                     when 0 =>
                         exit;
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
                     when others =>	-- X-Trans
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					     or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -1681,7 +1681,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Clock, Reset;
@@ -1732,7 +1732,7 @@ end;
 --		  --------------------------------------------------
 --		   ~ = not equal;    * = don't care;   NC = no change
 --		   0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		   X = 'X', 'W', 'Z', or '-'; 
+--		   X = 'X', 'W', 'Z', or '-';
 --		  (The truth table rows are in order of decreasing precedence)
 --
 --		   Clock transition definitions:
@@ -1768,8 +1768,8 @@ end;
 --			   else
 --				      Output := X;
 --
---		   Note 4: if ((Output already == Data) or 
---			       (Output already == U)) 
+--		   Note 4: if ((Output already == Data) or
+--			       (Output already == U))
 --				      (no change);
 --			   else if (Data == U)
 --				      Output := U;
@@ -1825,7 +1825,7 @@ begin
                 clock_flag := 0;	-- 0-Trns
     end if;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
 	case TWOBIT'(Reset & Set) is
 	    when "UU"|"UX"|"U0"|"U1"|"UZ"|"UW"|"UL"|"UH"|"U-"|
 		      "XU"|"0U"|"1U"|"ZU"|"WU"|"LU"|"HU"|"-U"  =>
@@ -1873,10 +1873,10 @@ begin
                 case clock_flag is
                     when 0 =>
                         exit;
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
                     when others =>	-- X-Trans
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					    or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -1909,7 +1909,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Clock, Reset, Set;
@@ -1960,7 +1960,7 @@ end;
 --		  --------------------------------------------------
 --		   ~ = not equal;    * = don't care;   NC = no change
 --		   0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		   X = 'X', 'W', 'Z', or '-'; 
+--		   X = 'X', 'W', 'Z', or '-';
 --		  (The truth table rows are in order of decreasing precedence)
 --
 --		   Clock transition definitions:
@@ -1996,8 +1996,8 @@ end;
 --			   else
 --				      Output := X;
 --
---		   Note 4: if ((Output already == Data) or 
---			       (Output already == U)) 
+--		   Note 4: if ((Output already == Data) or
+--			       (Output already == U))
 --				      (no change);
 --			   else if (Data == U)
 --				      Output := U;
@@ -2053,7 +2053,7 @@ begin
                 clock_flag := 0;	-- 0-Trns
     end if;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
 	case TWOBIT'(Reset & Set) is
 	    when "UU"|"UX"|"U0"|"U1"|"UZ"|"UW"|"UL"|"UH"|"U-"|
 		      "XU"|"0U"|"1U"|"ZU"|"WU"|"LU"|"HU"|"-U"  =>
@@ -2101,10 +2101,10 @@ begin
                 case clock_flag is
                     when 0 =>
                         exit;
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
                     when others =>	-- X-Trans
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					    or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -2137,7 +2137,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Clock, Reset, Set;
@@ -2184,10 +2184,10 @@ end;
 --		      ----------------------------------------------
 --		      ~ = not equal;    * = don't care;   NC = no change
 --		      0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		      X = 'X', 'W', 'Z', or '-'; 
+--		      X = 'X', 'W', 'Z', or '-';
 --		      (The truth table rows are in order of decreasing precedence)
 --
---		      Note 1: if ((Output already == 0) and not((Data != 0) 
+--		      Note 1: if ((Output already == 0) and not((Data != 0)
 --				   and ((Enable == X) or (Enable == 1))))
 --				      (no change);
 --			      else if ((Data == 0) and (Enable == 1))
@@ -2198,8 +2198,8 @@ end;
 --			      else
 --				      Output := X;
 --
---		      Note 2: if ((Output already == Data) or 
---				  (Output already == U)) 
+--		      Note 2: if ((Output already == Data) or
+--				  (Output already == U))
 --				      (no change);
 --			      else if (Data == U)
 --				      Output := U;
@@ -2236,7 +2236,7 @@ begin
         variable nextstate: STD_LOGIC_VECTOR (Data'RANGE);
         variable next_assign_val: STD_LOGIC_VECTOR (Data'RANGE);
         variable delta: Time := 0 ns;
-   	variable enable_flag : integer := 0; 	
+   	variable enable_flag : integer := 0;
 
     begin
     -- evaluate logical function
@@ -2251,22 +2251,22 @@ begin
             enable_flag := 2;
     end case;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
         case Reset is
-            when 'U' => 
+            when 'U' =>
                 nextstate(i) :=  'U';
-            when '1' | 'H' => 
+            when '1' | 'H' =>
                 nextstate(i) :=  STRENGTH_MAP('0', strn);
             when '0' | 'L' =>
                 case enable_flag is
                     when 0 =>
                         exit;
-              	    when 3 => 
+              	    when 3 =>
                         nextstate(i) := 'U';
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
-                    when others =>	
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+                    when others =>
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					     or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -2276,7 +2276,7 @@ begin
             		end if;
                 end case;
             when 'X' | 'W' | 'Z' | '-' =>
-                if ((enable_flag = 3) or 
+                if ((enable_flag = 3) or
 		    (next_assign_val(i) = 'U' and not(enable_flag = 1)) or
 		    (Data(i) = 'U' and not(enable_flag = 0))) then
                        nextstate(i) :=  'U';
@@ -2312,7 +2312,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Data, Enable, Reset;
@@ -2359,10 +2359,10 @@ end;
 --		      ----------------------------------------------
 --		      ~ = not equal;    * = don't care;   NC = no change
 --		      0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		      X = 'X', 'W', 'Z', or '-'; 
+--		      X = 'X', 'W', 'Z', or '-';
 --		      (The truth table rows are in order of decreasing precedence)
 --
---		      Note 1: if ((Output already == 0) and not((Data != 0) 
+--		      Note 1: if ((Output already == 0) and not((Data != 0)
 --				   and ((Enable == X) or (Enable == 1))))
 --				      (no change);
 --			      else if ((Data == 0) and (Enable == 1))
@@ -2373,8 +2373,8 @@ end;
 --			      else
 --				      Output := X;
 --
---		      Note 2: if ((Output already == Data) or 
---				  (Output already == U)) 
+--		      Note 2: if ((Output already == Data) or
+--				  (Output already == U))
 --				      (no change);
 --			      else if (Data == U)
 --				      Output := U;
@@ -2411,7 +2411,7 @@ begin
         variable nextstate: STD_LOGIC_VECTOR (Data'RANGE);
         variable next_assign_val: STD_LOGIC_VECTOR (Data'RANGE);
         variable delta: Time := 0 ns;
-   	variable enable_flag : integer := 0; 	
+   	variable enable_flag : integer := 0;
 
     begin
     -- evaluate logical function
@@ -2426,22 +2426,22 @@ begin
             enable_flag := 2;
     end case;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
         case Reset is
-            when 'U' => 
+            when 'U' =>
                 nextstate(i) :=  'U';
             when '0' | 'L' =>
                 nextstate(i) :=  STRENGTH_MAP('0', strn);
-            when '1' | 'H' => 
+            when '1' | 'H' =>
                 case enable_flag is
                     when 0 =>
                         exit;
-              	    when 3 => 
+              	    when 3 =>
                         nextstate(i) := 'U';
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
-                    when others =>	
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+                    when others =>
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					     or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -2451,7 +2451,7 @@ begin
             		end if;
                 end case;
             when 'X' | 'W' | 'Z' | '-' =>
-                if ((enable_flag = 3) or 
+                if ((enable_flag = 3) or
 		    (next_assign_val(i) = 'U' and not(enable_flag = 1)) or
 		    (Data(i) = 'U' and not(enable_flag = 0))) then
                        nextstate(i) :=  'U';
@@ -2487,7 +2487,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Data, Enable, Reset;
@@ -2539,16 +2539,16 @@ end;
 --		  --------------------------------------------------
 --		  ~ = not equal;    * = don't care;   NC = no change
 --		  0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		  X = 'X', 'W', 'Z', or '-'; 
+--		  X = 'X', 'W', 'Z', or '-';
 --		  (The truth table rows are in order of decreasing precedence)
 --
---		  Note 1: if (((Output already == U) and (Enable != 1)) or 
+--		  Note 1: if (((Output already == U) and (Enable != 1)) or
 --			      ((Data == U) and (Enable != 0)))
 --				      Output := U;
 --			  else
 --				      Output := X;
 --
---		  Note 2: if ((Output already == 1) and not((Data != 1) 
+--		  Note 2: if ((Output already == 1) and not((Data != 1)
 --			       and ((Enable == X) or (Enable == 1))))
 --				      Output := 1;
 --			  else if ((Data == 1) and (Enable == 1))
@@ -2558,7 +2558,7 @@ end;
 --			  else
 --				      Output := X;
 --
---		  Note 3: if ((Output already == 0) and not((Data != 0) 
+--		  Note 3: if ((Output already == 0) and not((Data != 0)
 --			       and ((Enable == X) or (Enable == 1))))
 --				      Output := 0;
 --			  else if ((Data == 0) and (Enable == 1))
@@ -2568,8 +2568,8 @@ end;
 --			  else
 --				      Output := X;
 --
---		  Note 4: if ((Output already == Data) or 
---			      (Output already == U)) 
+--		  Note 4: if ((Output already == Data) or
+--			      (Output already == U))
 --				      (no change);
 --			  else if (Data == U)
 --				      Output := U;
@@ -2607,7 +2607,7 @@ begin
         variable nextstate: STD_LOGIC_VECTOR (Data'RANGE);
         variable next_assign_val: STD_LOGIC_VECTOR (Data'RANGE);
         variable delta: Time := 0 ns;
-   	variable enable_flag : integer := 0; 	
+   	variable enable_flag : integer := 0;
 
     begin
     -- evaluate logical function
@@ -2622,7 +2622,7 @@ begin
             enable_flag := 2;
     end case;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
 	case TWOBIT'(Reset & Set) is
 	    when "UU"|"UX"|"U0"|"U1"|"UZ"|"UW"|"UL"|"UH"|"U-"|
 		      "XU"|"0U"|"1U"|"ZU"|"WU"|"LU"|"HU"|"-U"  =>
@@ -2673,12 +2673,12 @@ begin
                 case enable_flag is
                     when 0 =>
                         exit;
-              	    when 3 => 
+              	    when 3 =>
                         nextstate(i) := 'U';
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
                     when others =>	-- X-Trans
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					    or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -2711,7 +2711,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Data, Enable, Reset, Set;
@@ -2763,16 +2763,16 @@ end;
 --		  --------------------------------------------------
 --		  ~ = not equal;    * = don't care;   NC = no change
 --		  0 = '0' or 'L';   1 = '1' or 'H';   U = 'U';
---		  X = 'X', 'W', 'Z', or '-'; 
+--		  X = 'X', 'W', 'Z', or '-';
 --		  (The truth table rows are in order of decreasing precedence)
 --
---		  Note 1: if (((Output already == U) and (Enable != 1)) or 
+--		  Note 1: if (((Output already == U) and (Enable != 1)) or
 --			      ((Data == U) and (Enable != 0)))
 --				      Output := U;
 --			  else
 --				      Output := X;
 --
---		  Note 2: if ((Output already == 1) and not((Data != 1) 
+--		  Note 2: if ((Output already == 1) and not((Data != 1)
 --			       and ((Enable == X) or (Enable == 1))))
 --				      Output := 1;
 --			  else if ((Data == 1) and (Enable == 1))
@@ -2782,7 +2782,7 @@ end;
 --			  else
 --				      Output := X;
 --
---		  Note 3: if ((Output already == 0) and not((Data != 0) 
+--		  Note 3: if ((Output already == 0) and not((Data != 0)
 --			       and ((Enable == X) or (Enable == 1))))
 --				      Output := 0;
 --			  else if ((Data == 0) and (Enable == 1))
@@ -2792,8 +2792,8 @@ end;
 --			  else
 --				      Output := X;
 --
---		  Note 4: if ((Output already == Data) or 
---			      (Output already == U)) 
+--		  Note 4: if ((Output already == Data) or
+--			      (Output already == U))
 --				      (no change);
 --			  else if (Data == U)
 --				      Output := U;
@@ -2831,7 +2831,7 @@ begin
         variable nextstate: STD_LOGIC_VECTOR (Data'RANGE);
         variable next_assign_val: STD_LOGIC_VECTOR (Data'RANGE);
         variable delta: Time := 0 ns;
-   	variable enable_flag : integer := 0; 	
+   	variable enable_flag : integer := 0;
 
     begin
     -- evaluate logical function
@@ -2846,7 +2846,7 @@ begin
             enable_flag := 2;
     end case;
 
-    for i in Data'RANGE loop 
+    for i in Data'RANGE loop
 	case TWOBIT'(Reset & Set) is
 	    when "UU"|"UX"|"U0"|"U1"|"UZ"|"UW"|"UL"|"UH"|"U-"|
 		      "XU"|"0U"|"1U"|"ZU"|"WU"|"LU"|"HU"|"-U"  =>
@@ -2897,12 +2897,12 @@ begin
                 case enable_flag is
                     when 0 =>
                         exit;
-              	    when 3 => 
+              	    when 3 =>
                         nextstate(i) := 'U';
-              	    when 1 => 
+              	    when 1 =>
                         nextstate(i) := STRENGTH_MAP(Data(i), strn);
-                    when others =>	
-			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn) 
+                    when others =>
+			if (next_assign_val(i) = STRENGTH_MAP(Data(i),strn)
 					    or next_assign_val(i) = 'U') then
                      	    next;
 			elsif (Data(i) = 'U') then
@@ -2935,7 +2935,7 @@ begin
         currentstate(i) <= nextstate(i) after delta;
         Output(i) <= nextstate(i) after delta;
         next_assign_val(i) := nextstate(i);
-     
+
     end loop;
 
     wait on Data, Enable, Reset, Set;
@@ -2990,7 +2990,7 @@ end;
 --
 --	  4. Initialization: m() = 'U's.
 --
---	  5. Output strength: mapping according to parameter strn 
+--	  5. Output strength: mapping according to parameter strn
 --			      (default strn = strn_X01).
 --
 --	  6. Timing: output rising and falling delays are set to DATAout
@@ -3159,7 +3159,7 @@ end;
 --
 --	  2. Initialization: m() = 'U's.
 --
---	  3. Output strength: mapping according to parameter strn 
+--	  3. Output strength: mapping according to parameter strn
 --			      (default strn = strn_X01).
 --
 --	  4. Timing: output rising and falling delays are set to DATA
@@ -3273,7 +3273,7 @@ end;
 --	Primitive name: SUHDCK
 --
 --	Purpose: A setup/hold time checker.
---		 
+--
 --	Assertion condition:
 --		when Clock changes from (0 | L) to (1 | H)
 --			assert Data'last_event >= tSetup
@@ -3359,12 +3359,12 @@ end;
 --	Primitive name: MPWCK
 --
 --	Purpose: A minimum pulse width checker.
---		 
+--
 --	Assertion condition:
 --		when Clock changes from high
 --			assert Clock'last_event >= tHigh
 --			report "Minimum pulse width violation on clock high."
---					
+--
 --		when Clock changes from low
 --			assert Clock'last_event >= tLow
 --			report "Minimum pulse width violation on clock low."
@@ -3428,9 +3428,9 @@ end;
 --
 --	Primitive name: RECOVCK
 --
---	Purpose: A recovery time checker.  Check for reset (active low) 
+--	Purpose: A recovery time checker.  Check for reset (active low)
 --		 releasing too close to clock triggering edge.
---		 
+--
 --	Assertion condition:
 --		when Clock changes from (0 | L) to (1 | H)
 --		     	assert Reset did not rise for tSetup time
@@ -3481,7 +3481,7 @@ begin
     begin
 	setup_time := tSetup;
 	violation := ((Clock'last_value = '0' or Clock'last_value = 'L') and
-	      (Clock = '1' or Clock = 'H') and 
+	      (Clock = '1' or Clock = 'H') and
 	      (reset_rise'last_event < setup_time));
 
 	assert not violation
@@ -3590,7 +3590,7 @@ begin
 	    next_assign_val := nextstate;
 	end if;
 
-	wait on Input, Enable; 
+	wait on Input, Enable;
     end process P;
 end A;
 
@@ -3670,7 +3670,7 @@ begin
 	    next_assign_val := nextstate;
 	end if;
 
-	wait on Input, Enable; 
+	wait on Input, Enable;
     end process P;
 end A;
 
@@ -3750,7 +3750,7 @@ begin
 	    next_assign_val := nextstate;
 	end if;
 
-	wait on Input, Enable; 
+	wait on Input, Enable;
     end process P;
 end A;
 
@@ -3830,7 +3830,7 @@ begin
 	    next_assign_val := nextstate;
 	end if;
 
-	wait on Input, Enable; 
+	wait on Input, Enable;
     end process P;
 end A;
 
@@ -3902,7 +3902,7 @@ begin
 	    next_assign_val := nextstate;
 	end if;
 
-	wait on Input; 
+	wait on Input;
     end process P;
 end A;
 
