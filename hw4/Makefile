@@ -6,7 +6,7 @@ work:
 
 all: | work build_all
 
-build_all: build1 build2 build3
+build_all: build1 build2 build3 build4
 
 build1:
 	vcom -novopt q1/*.vhd
