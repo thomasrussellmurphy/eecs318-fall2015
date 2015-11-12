@@ -1,0 +1,99 @@
+\documentclass[10pt]{article}
+
+\usepackage[psamsfonts]{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+
+\usepackage[left=2.35cm,top=2.45cm,bottom=2.45cm,right=2.35cm,letterpaper]{geometry}
+
+\usepackage{hyperref}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhf{}
+\fancyfoot[C,CO]{\thepage}
+\fancyhead[L,LO]{\bfseries EECS 318}
+\fancyhead[C,CO]{\bfseries Homework 4}
+\fancyhead[R,RO]{Fall 2015}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem*{solution}{Solution}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\labelenumi}{\textbf{(\alph{enumi})}}
+\renewcommand{\labelenumii}{\textbf{(\roman{enumii})}}
+
+\newcommand{\ds}{\displaystyle}
+
+\newcommand{\ttname}[1]{\texttt{\detokenize{#1}}}
+
+\parindent=0pt
+
+\begin{document}
+
+  \begin{center}
+  \section*{Homework 4}
+  \end{center}
+  Thomas Murphy (\textit{trm70})
+
+  \today
+
+  \bigskip
+
+  \begin{problem}
+    Multi-Function Adder
+
+    The adder is implemented in  \ttname{q1/adder.vhd}
+
+    The testbench for the adder is \ttname{q1/tb_adder.vhd}.
+
+  \end{problem}
+
+  \begin{problem}
+    Behavioral and Structural State Machine
+
+    The state machine is implemented in the following modules:
+
+    \begin{itemize}
+      \item IEEE \ttname{std_logic_components}: \ttname{q2/std_logic_components.vhd}
+      \item IEEE \ttname{std_logic_entities}: \ttname{q2/std_logic_entities.vhd}
+      \item j-k flip-flop: \ttname{q2/jkff.vhd}
+      \item behavioral state machine: \ttname{q2/behavioral_sm.vhd}
+      \item structural state machine: \ttname{q2/structural_sm.vhd}
+    \end{itemize}
+
+    The testbench for the state machine is \ttname{q2/tb_sm.vhd}.
+
+  \end{problem}
+
+  \begin{problem}
+    Signed Multiplier
+
+    The multiplier is implemented in  \ttname{q3/multiplier_5_5.vhd}
+
+    The testbench for the multiplier is \ttname{q3/tb_multiplier_5_5.vhd}.
+
+  \end{problem}
+
+  \begin{problem}
+    Signed Divider
+
+    The divider is implemented in  \ttname{q4/divider_4_4.vhd}
+
+    The testbench for the multiplier is \ttname{q4/tb_divider_4_4.vhd}.
+
+  \end{problem}
+
+\end{document}
