@@ -53,7 +53,7 @@ begin
   begin
 
     a <= (others => '0');
-    b <= (others => '0');
+    b <= to_signed(1, b'length);
     wait until rising_edge(test_clk);
 
     a <= to_signed(7, a'length);
@@ -65,7 +65,7 @@ begin
     wait until rising_edge(test_clk);
 
     a <= (others => '0');
-    b <= (others => '0');
+    b <= to_signed(1, b'length);
     wait until rising_edge(test_clk);
     end_simulation <= true;
     wait;
