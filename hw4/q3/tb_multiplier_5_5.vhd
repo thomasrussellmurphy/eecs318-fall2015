@@ -68,8 +68,9 @@ begin
     b <= to_signed(-12, b'length);
     wait until rising_edge(test_clk);
 
+    a <= (others => '0');
+    b <= (others => '0');
     wait until rising_edge(test_clk);
-
     end_simulation <= true;
     wait;
   end process test_sequence;

@@ -42,31 +42,31 @@ begin
   products: process(a_norm, b_norm) is
   begin
     if b_norm(0) = '1' then
-      product0 <= a;
+      product0 <= a_norm;
     else
       product0 <= (others => '0');
     end if;
 
     if b_norm(1) = '1' then
-      product1 <= a;
+      product1 <= a_norm;
     else
       product1 <= (others => '0');
     end if;
 
     if b_norm(2) = '1' then
-      product2 <= a;
+      product2 <= a_norm;
     else
       product2 <= (others => '0');
     end if;
 
     if b_norm(3) = '1' then
-      product3 <= a;
+      product3 <= a_norm;
     else
       product3 <= (others => '0');
     end if;
 
     if b_norm(4) = '1' then
-      product4 <= a;
+      product4 <= a_norm;
     else
       product4 <= (others => '0');
     end if;
