@@ -22,12 +22,12 @@
 # To use:
 # 1. You should organize your project like this:
 #    src/
-#    |--- code.c
+#    |--- code.cpp
 #    |--- module-1.h
-#    |--- module-1/code.c
-#    \--- module-2/code.c
+#    |--- module-1/code.cpp
+#    \--- module-2/code.cpp
 #    test/
-#    \--- test-code.c
+#    \--- test-code.cpp
 #    inc/
 #    \--- public-header.h
 # 2. Fill out the variables labelled CONFIGURATION.
@@ -52,7 +52,7 @@ PROJECT_NAME="EECS 318 Netlist Parser"
 # PROJECT_TYPE - staticlib, dynamiclib, executable
 PROJECT_TYPE=executable
 # PROJECT_MAIN - filename within your source directory that contains main()
-PROJECT_MAIN=main.c
+PROJECT_MAIN=main.cpp
 # TARGET - the name you want your target to have (bin/release/[whatgoeshere])
 TARGET=main
 # TEST_TARGET - the name you want your tests to have (probably test)
@@ -80,10 +80,10 @@ COVERAGE_DIR=cov
 
 # --- COMPILATION FLAGS: Things you may want/need to configure, but I've put
 # them at sane defaults.
-CC=gcc
+CC=g++
 FLAGS=-Wall -Wextra -pedantic
 INC=-I$(INCLUDE_DIR) -I$(SOURCE_DIR) $(addprefix -I,$(EXTRA_INCLUDES))
-CFLAGS=$(FLAGS) -std=c99 -fPIC $(INC) -c
+CFLAGS=$(FLAGS) -std=c++11 -fPIC $(INC) -c
 LFLAGS=$(FLAGS)
 
 # --- BUILD CONFIGURATIONS: Feel free to get creative with these if you'd like.
@@ -109,16 +109,16 @@ endif
 # mess around with this stuff, unless you have a decent understanding of
 # everything this Makefile does.
 DIR_GUARD=@mkdir -p $(@D)
-OBJECT_MAIN=$(OBJECT_DIR)/$(CFG)/$(SOURCE_DIR)/$(patsubst %.c,%.o,$(PROJECT_MAIN))
+OBJECT_MAIN=$(OBJECT_DIR)/$(CFG)/$(SOURCE_DIR)/$(patsubst %.cpp,%.o,$(PROJECT_MAIN))
 
-SOURCES=$(shell find $(SOURCE_DIR) -type f -name "*.c")
-OBJECTS=$(patsubst $(SOURCE_DIR)/%.c,$(OBJECT_DIR)/$(CFG)/$(SOURCE_DIR)/%.o,$(SOURCES))
+SOURCES=$(shell find $(SOURCE_DIR) -type f -name "*.cpp")
+OBJECTS=$(patsubst $(SOURCE_DIR)/%.cpp,$(OBJECT_DIR)/$(CFG)/$(SOURCE_DIR)/%.o,$(SOURCES))
 
-TEST_SOURCES=$(shell find $(TEST_DIR) -type f -name "*.c" 2> /dev/null)
-TEST_OBJECTS=$(patsubst $(TEST_DIR)/%.c,$(OBJECT_DIR)/$(CFG)/$(TEST_DIR)/%.o,$(TEST_SOURCES))
+TEST_SOURCES=$(shell find $(TEST_DIR) -type f -name "*.cpp" 2> /dev/null)
+TEST_OBJECTS=$(patsubst $(TEST_DIR)/%.cpp,$(OBJECT_DIR)/$(CFG)/$(TEST_DIR)/%.o,$(TEST_SOURCES))
 
-DEPENDENCIES  = $(patsubst $(SOURCE_DIR)/%.c,$(DEPENDENCY_DIR)/$(SOURCE_DIR)/%.d,$(SOURCES))
-DEPENDENCIES += $(patsubst $(TEST_DIR)/%.c,$(DEPENDENCY_DIR)/$(TEST_DIR)/%.d,$(TEST_SOURCES))
+DEPENDENCIES  = $(patsubst $(SOURCE_DIR)/%.cpp,$(DEPENDENCY_DIR)/$(SOURCE_DIR)/%.d,$(SOURCES))
+DEPENDENCIES += $(patsubst $(TEST_DIR)/%.cpp,$(DEPENDENCY_DIR)/$(TEST_DIR)/%.d,$(TEST_SOURCES))
 
 # --- GLOBAL TARGETS: You can probably adjust and augment these if you'd like.
 .PHONY: all test clean clean_all clean_cov clean_doc
@@ -175,12 +175,12 @@ $(BINARY_DIR)/$(CFG)/$(TEST_TARGET): $(filter-out $(OBJECT_MAIN),$(OBJECTS)) $(T
 	$(CC) $(LFLAGS) $^ -o $@
 
 # --- Generic Compilation Command
-$(OBJECT_DIR)/$(CFG)/%.o: %.c
+$(OBJECT_DIR)/$(CFG)/%.o: %.cpp
 	$(DIR_GUARD)
 	$(CC) $(CFLAGS) $< -o $@
 
 # --- Automatic Dependency Generation
-$(DEPENDENCY_DIR)/%.d: %.c
+$(DEPENDENCY_DIR)/%.d: %.cpp
 	$(DIR_GUARD)
 	$(CC) $(CFLAGS) -MM $< | sed -e 's!\(.*\)\.o:!$@ $(OBJECT_DIR)/$$(CFG)/$(<D)/\1.o:!' > $@
 
