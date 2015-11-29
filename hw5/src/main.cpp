@@ -2,10 +2,11 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <map>
+#include <queue>
 #include <set>
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 // Structure: type, output flag, level, fan-in (list), fan-out(list), name string
 // List is count and array of pointers/integers
@@ -69,13 +70,39 @@ Gate_Op_t enumify_operation(std::string s)
   return Gate_operation::INVALID;
 }
 
+std::string stringify_operation(Gate_Op_t op)
+{
+  switch(op)
+  {
+    case Gate_operation::AND:
+      return Gate_names[0];
+    case Gate_operation::OR:
+      return Gate_names[1];
+    case Gate_operation::NAND:
+      return Gate_names[2];
+    case Gate_operation::NOR:
+      return Gate_names[3];
+    case Gate_operation::XOR:
+      return Gate_names[4];
+    case Gate_operation::XNOR:
+      return Gate_names[5];
+    case Gate_operation::NOT:
+      return Gate_names[6];
+    case Gate_operation::DFF:
+      return Gate_names[7];
+    case Gate_operation::BUF:
+      return Gate_names[8];
+    default:
+      return "INVALID GATE";
+  }
+}
+
 typedef struct Gate
 {
   Gate_Op_t op;
-  bool is_output;
   int level;
-  std::vector<Gate*> fan_in;
-  std::vector<Gate*> fan_out;
+  std::set<Gate*> fan_in;
+  std::set<Gate*> fan_out;
   std::string name;
   std::string op_name;
 } Gate_t;
@@ -108,7 +135,6 @@ Gate_t* get_or_make_gate(std::unordered_map<std::string, Gate_t*>* gates, std::s
     // Create and setup the new gate
     gate = new(Gate_t);
     gate->name = name;
-    gate->is_output = false;
     gate->level = -1;
     gates->insert(std::pair<std::string, Gate_t*>(name, gate));
   }
@@ -120,8 +146,8 @@ void add_input_net_to_gate(std::unordered_map<std::string, Gate_t*>* gates, Gate
 {
   Gate_t* input_gate = get_or_make_gate(gates, input_net);
 
-  gate->fan_in.push_back(input_gate);
-  input_gate->fan_out.push_back(gate);
+  gate->fan_in.insert(input_gate);
+  input_gate->fan_out.insert(gate);
 }
 
 int main(int argc, char *argv[])
@@ -152,6 +178,7 @@ int main(int argc, char *argv[])
   std::string line;
   std::set<std::string> input_nets;
   std::set<std::string> output_nets;
+  std::set<std::string> dff_gates;
 
   std::unordered_map<std::string, Gate_t*> gates;
 
@@ -212,6 +239,11 @@ int main(int argc, char *argv[])
       gate->op = gate_op;
       gate->op_name = gate_op_name;
 
+      if(gate_op == Gate_operation::DFF)
+      {
+        dff_gates.insert(out_net);
+      }
+
       // Now to handle the gate input(s)
       if(line.find(", ") != std::string::npos)
       {
@@ -240,17 +272,139 @@ int main(int argc, char *argv[])
       }
     }
   }
-
-  for(std::string output_gate_name : output_nets)
-  {
-    std::cout << "searching for gate " << output_gate_name << std::endl;
-    Gate_t* output_gate = gates.at(output_gate_name);
-    std::cout << "got gate " << output_gate->name << std::endl;
-    output_gate->is_output = true;
-  }
-
-  std::cout << "Total initial gates+inputs: " << gates.size() << std::endl;
-
   // Done with reading the source file
   source.close();
+
+  // Create output buffers
+  for(std::string output_net_name : output_nets)
+  {
+    std::string output_gate_name = output_net_name + "_out";
+    Gate_t* output_gate = get_or_make_gate(&gates, output_gate_name);
+
+    add_input_net_to_gate(&gates, output_gate, output_net_name);
+    output_gate->op = Gate_operation::BUF;
+    output_gate->op_name = "BUF";
+
+    std::cout << "Output: " << output_gate->name << std::endl;
+  }
+
+  // Process circuit to add buffers on gates with fanout >1
+  std::set<std::string> gates_with_fanout;
+  for(std::pair<std::string, Gate_t*> gate_pair : gates)
+  {
+    if(gate_pair.second->fan_out.size() > 1)
+    {
+      gates_with_fanout.insert(gate_pair.first);
+      std::cout << "Gate with fanout " << gate_pair.second->fan_out.size();
+      std::cout << ": " << gate_pair.first << std::endl;
+    }
+  }
+
+  for(std::string fanout_gate : gates_with_fanout)
+  {
+    Gate_t* source_gate = get_or_make_gate(&gates, fanout_gate);
+
+    std::set<Gate_t*> buffered_fanout;
+
+    for(Gate_t* destination : source_gate->fan_out)
+    {
+      std::string buf_name = "BUF-" + source_gate->name + "-" + destination->name;
+      Gate_t* buf = get_or_make_gate(&gates, buf_name);
+      buffered_fanout.insert(buf);
+      destination->fan_in.erase(source_gate);
+      add_input_net_to_gate(&gates, destination, buf_name);
+    }
+
+    source_gate->fan_out.swap(buffered_fanout);
+  }
+
+  // Taking care of setting levels
+  std::queue<std::string> gates_needing_level_propogation;
+
+  // Set inputs as level zero
+  for(std::string input_gate_name : input_nets)
+  {
+    Gate_t* input_gate = gates.at(input_gate_name);
+    input_gate->level = 0;
+    gates_needing_level_propogation.push(input_gate_name);
+  }
+
+  // Set DFFs as level zero
+  for(std::string dff_gate_name : dff_gates)
+  {
+    Gate_t* dff_gate = gates.at(dff_gate_name);
+    dff_gate->level = 0;
+
+    gates_needing_level_propogation.push(dff_gate_name);
+  }
+
+  while(!gates_needing_level_propogation.empty())
+  {
+    std::string gate_name = gates_needing_level_propogation.front();
+    gates_needing_level_propogation.pop();
+
+    Gate_t* gate = get_or_make_gate(&gates, gate_name);
+
+    for(Gate_t* child : gate->fan_out)
+    {
+      if(child->op != Gate_operation::DFF)
+      {
+        child->level = gate->level + 1;
+        gates_needing_level_propogation.push(child->name);
+      }
+    }
+  }
+
+  // REQUIREMENT 1: total number of gates after processing
+  std::cout << "Total initial gates+inputs: " << gates.size() << std::endl;
+
+  // REQUIREMENT 2: number of gates at each level
+  std::map<int, int> levels_count;
+  for(std::pair<std::string, Gate_t*> gate_pair : gates)
+  {
+    int level = gate_pair.second->level;
+
+    if(levels_count.count(level))
+    {
+      levels_count.at(level) += 1;
+    } else
+    {
+      levels_count.insert(std::pair<int, int>(level, 1));
+    }
+  }
+
+  for(std::pair<int, int> level_count_pair : levels_count)
+  {
+    std::cout << "Level " << level_count_pair.first << ": ";
+    std::cout << level_count_pair.second << std::endl;
+  }
+
+  // REQUIREMENT 3: listing of whole circuit
+  for(std::pair<std::string, Gate_t*> gate_pair : gates)
+  {
+    Gate_t* gate = gate_pair.second;
+    std::cout << "Gate: " << gate->name << std::endl;
+
+    std::cout << "  Type: " << stringify_operation(gate->op) << std::endl;
+
+    std::cout << "  Inputs: ";
+    for(Gate_t* input : gate->fan_in)
+    {
+      std::cout << input->name << " ";
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "  Outputs: ";
+    for(Gate_t* output : gate->fan_out)
+    {
+      std::cout << output->name << " ";
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "  Level: " << gate->level;
+
+    std::cout << std::endl;
+  }
 }
