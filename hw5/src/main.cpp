@@ -215,8 +215,6 @@ int main(int argc, char *argv[])
       std::string net_name = line.substr(start, len);
       input_nets.insert(net_name);
 
-      std::cout << "Output: " << net_name << std::endl;
-
       Gate_t* input_gate = get_or_make_gate(&gates, net_name);
       input_gate->op = Gate_operation::INPUT;
       input_gate->op_name = stringify_operation(Gate_operation::INPUT);
