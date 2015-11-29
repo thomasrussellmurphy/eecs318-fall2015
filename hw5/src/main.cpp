@@ -22,10 +22,12 @@ typedef enum class Gate_operation
   NOT,
   DFF,
   BUF,
+  INPUT,
+  OUTPUT,
   INVALID
 } Gate_Op_t;
 
-const char* Gate_names[] = {"AND", "OR", "NAND", "NOR", "XOR", "XNOR", "NOT", "DFF", "BUF"};
+const char* Gate_names[] = {"AND", "OR", "NAND", "NOR", "XOR", "XNOR", "NOT", "DFF", "BUF", "INPUT", "OUTPUT"};
 
 Gate_Op_t enumify_operation(std::string s)
 {
@@ -66,6 +68,8 @@ Gate_Op_t enumify_operation(std::string s)
     return Gate_operation::BUF;
   }
 
+  // DOES NOT directly process the I/O gate cases here
+
   // Default value
   return Gate_operation::INVALID;
 }
@@ -92,6 +96,10 @@ std::string stringify_operation(Gate_Op_t op)
       return Gate_names[7];
     case Gate_operation::BUF:
       return Gate_names[8];
+    case Gate_operation::INPUT:
+      return Gate_names[9];
+    case Gate_operation::OUTPUT:
+      return Gate_names[10];
     default:
       return "INVALID GATE";
   }
@@ -135,6 +143,8 @@ Gate_t* get_or_make_gate(std::unordered_map<std::string, Gate_t*>* gates, std::s
     // Create and setup the new gate
     gate = new(Gate_t);
     gate->name = name;
+    gate->op = Gate_operation::INVALID;
+    gate->op_name = stringify_operation(Gate_operation::INVALID);
     gate->level = -1;
     gates->insert(std::pair<std::string, Gate_t*>(name, gate));
   }
@@ -204,7 +214,12 @@ int main(int argc, char *argv[])
       size_t len = line.find(")") - start;
       std::string net_name = line.substr(start, len);
       input_nets.insert(net_name);
-      // These will be unnamed gates with zero fan-in
+
+      std::cout << "Output: " << net_name << std::endl;
+
+      Gate_t* input_gate = get_or_make_gate(&gates, net_name);
+      input_gate->op = Gate_operation::INPUT;
+      input_gate->op_name = stringify_operation(Gate_operation::INPUT);
     }
 
     if(is_output_line(line))
@@ -234,10 +249,10 @@ int main(int argc, char *argv[])
       Gate_Op_t gate_op = enumify_operation(gate_op_name);
       if(gate_op == Gate_operation::INVALID)
       {
-        std::cout << "invalid gate: " << gate_op_name << std::endl;
+        std::cerr << "invalid gate: " << gate_op_name << std::endl;
       }
       gate->op = gate_op;
-      gate->op_name = gate_op_name;
+      gate->op_name = stringify_operation(gate_op);
 
       if(gate_op == Gate_operation::DFF)
       {
@@ -275,17 +290,15 @@ int main(int argc, char *argv[])
   // Done with reading the source file
   source.close();
 
-  // Create output buffers
+  // Create outputs
   for(std::string output_net_name : output_nets)
   {
     std::string output_gate_name = output_net_name + "_out";
     Gate_t* output_gate = get_or_make_gate(&gates, output_gate_name);
 
     add_input_net_to_gate(&gates, output_gate, output_net_name);
-    output_gate->op = Gate_operation::BUF;
-    output_gate->op_name = "BUF";
-
-    std::cout << "Output: " << output_gate->name << std::endl;
+    output_gate->op = Gate_operation::OUTPUT;
+    output_gate->op_name = stringify_operation(Gate_operation::OUTPUT);
   }
 
   // Process circuit to add buffers on gates with fanout >1
@@ -295,8 +308,6 @@ int main(int argc, char *argv[])
     if(gate_pair.second->fan_out.size() > 1)
     {
       gates_with_fanout.insert(gate_pair.first);
-      std::cout << "Gate with fanout " << gate_pair.second->fan_out.size();
-      std::cout << ": " << gate_pair.first << std::endl;
     }
   }
 
@@ -306,15 +317,24 @@ int main(int argc, char *argv[])
 
     std::set<Gate_t*> buffered_fanout;
 
+    // Insertion of buffer into the fanout net
     for(Gate_t* destination : source_gate->fan_out)
     {
       std::string buf_name = "BUF-" + source_gate->name + "-" + destination->name;
+
+      // Setup the new buffer
       Gate_t* buf = get_or_make_gate(&gates, buf_name);
+      buf->op = Gate_operation::BUF;
+      buf->op_name = stringify_operation(Gate_operation::BUF);
+      buf->fan_in.insert(source_gate);
+
+      // Swap in buffer on the destination side
       buffered_fanout.insert(buf);
       destination->fan_in.erase(source_gate);
       add_input_net_to_gate(&gates, destination, buf_name);
     }
 
+    // Swap in all of the new buffers on the source side
     source_gate->fan_out.swap(buffered_fanout);
   }
 
@@ -347,6 +367,7 @@ int main(int argc, char *argv[])
 
     for(Gate_t* child : gate->fan_out)
     {
+      // We need to set the level of any encountered non-DFF children gates
       if(child->op != Gate_operation::DFF)
       {
         child->level = gate->level + 1;
@@ -356,7 +377,8 @@ int main(int argc, char *argv[])
   }
 
   // REQUIREMENT 1: total number of gates after processing
-  std::cout << "Total initial gates+inputs: " << gates.size() << std::endl;
+  std::cout << "Total processed gates, inputs, and outputs: ";
+  std::cout << gates.size() << std::endl;
 
   // REQUIREMENT 2: number of gates at each level
   std::map<int, int> levels_count;
@@ -385,7 +407,7 @@ int main(int argc, char *argv[])
     Gate_t* gate = gate_pair.second;
     std::cout << "Gate: " << gate->name << std::endl;
 
-    std::cout << "  Type: " << stringify_operation(gate->op) << std::endl;
+    std::cout << "  Type: " << gate->op_name << std::endl;
 
     std::cout << "  Inputs: ";
     for(Gate_t* input : gate->fan_in)
