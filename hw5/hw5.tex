@@ -1,0 +1,216 @@
+\documentclass[10pt]{article}
+
+\usepackage[psamsfonts]{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+
+\usepackage[left=2.35cm,top=2.45cm,bottom=2.45cm,right=2.35cm,letterpaper]{geometry}
+
+\usepackage{hyperref}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhf{}
+\fancyfoot[C,CO]{\thepage}
+\fancyhead[L,LO]{\bfseries EECS 318}
+\fancyhead[C,CO]{\bfseries Homework 5}
+\fancyhead[R,RO]{Fall 2015}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem*{solution}{Solution}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\labelenumi}{\textbf{(\alph{enumi})}}
+\renewcommand{\labelenumii}{\textbf{(\roman{enumii})}}
+
+\newcommand{\ds}{\displaystyle}
+
+\newcommand{\ttname}[1]{\texttt{\detokenize{#1}}}
+
+\parindent=0pt
+
+\begin{document}
+
+  \begin{center}
+  \section*{Homework 5}
+  \end{center}
+  Thomas Murphy (\textit{trm70})
+
+  \today
+
+  \bigskip
+
+  \begin{problem}
+    ISCAS Benchmark Circuit Description Processor
+
+    The input format processor is implemented in \ttname{src/main.cpp}. In should be compiled using the provided \ttname{Makefile} to ensure the correct compiler configuration is used. This program makes heavy use of \ttname{C++11} features. The two provided inputs are located in \ttname{inputs/}.
+
+    \bigskip
+
+    An example output for the \ttname{inputs/s27.txt} input circuit description is as follows.
+
+    \begin{verbatim}
+Total processed gates, inputs, and outputs: 27
+Level 0: 7
+Level 1: 2
+Level 2: 4
+Level 3: 2
+Level 4: 2
+Level 5: 2
+Level 6: 1
+Level 7: 1
+Level 8: 3
+Level 9: 2
+Level 10: 1
+Gate: BUF-G12-G13
+  Type: BUF
+  Inputs: G12
+  Outputs: G13
+  Level: 2
+Gate: G5
+  Type: DFF
+  Inputs: G10
+  Outputs: G11
+  Level: 0
+Gate: BUF-G11-G6
+  Type: BUF
+  Inputs: G11
+  Outputs: G6
+  Level: 8
+Gate: G17
+  Type: NOT
+  Inputs: BUF-G11-G17
+  Outputs: G17_out
+  Level: 9
+Gate: BUF-G11-G10
+  Type: BUF
+  Inputs: G11
+  Outputs: G10
+  Level: 8
+Gate: G14
+  Type: NOT
+  Inputs: G0
+  Outputs: BUF-G14-G10 BUF-G14-G8
+  Level: 1
+Gate: G9
+  Type: NAND
+  Inputs: G15 G16
+  Outputs: G11
+  Level: 6
+Gate: G16
+  Type: OR
+  Inputs: G3 BUF-G8-G16
+  Outputs: G9
+  Level: 5
+Gate: BUF-G8-G15
+  Type: BUF
+  Inputs: G8
+  Outputs: G15
+  Level: 4
+Gate: G15
+  Type: OR
+  Inputs: BUF-G12-G15 BUF-G8-G15
+  Outputs: G9
+  Level: 5
+Gate: G0
+  Type: INPUT
+  Inputs:
+  Outputs: G14
+  Level: 0
+Gate: G6
+  Type: DFF
+  Inputs: BUF-G11-G6
+  Outputs: G8
+  Level: 0
+Gate: G10
+  Type: NOR
+  Inputs: BUF-G11-G10 BUF-G14-G10
+  Outputs: G5
+  Level: 9
+Gate: G8
+  Type: AND
+  Inputs: G6 BUF-G14-G8
+  Outputs: BUF-G8-G15 BUF-G8-G16
+  Level: 3
+Gate: BUF-G12-G15
+  Type: BUF
+  Inputs: G12
+  Outputs: G15
+  Level: 2
+Gate: G3
+  Type: INPUT
+  Inputs:
+  Outputs: G16
+  Level: 0
+Gate: G1
+  Type: INPUT
+  Inputs:
+  Outputs: G12
+  Level: 0
+Gate: BUF-G14-G8
+  Type: BUF
+  Inputs: G14
+  Outputs: G8
+  Level: 2
+Gate: BUF-G14-G10
+  Type: BUF
+  Inputs: G14
+  Outputs: G10
+  Level: 2
+Gate: BUF-G11-G17
+  Type: BUF
+  Inputs: G11
+  Outputs: G17
+  Level: 8
+Gate: BUF-G8-G16
+  Type: BUF
+  Inputs: G8
+  Outputs: G16
+  Level: 4
+Gate: G13
+  Type: NOR
+  Inputs: BUF-G12-G13 G2
+  Outputs: G7
+  Level: 3
+Gate: G17_out
+  Type: OUTPUT
+  Inputs: G17
+  Outputs:
+  Level: 10
+Gate: G7
+  Type: DFF
+  Inputs: G13
+  Outputs: G12
+  Level: 0
+Gate: G2
+  Type: INPUT
+  Inputs:
+  Outputs: G13
+  Level: 0
+Gate: G12
+  Type: NOR
+  Inputs: G7 G1
+  Outputs: BUF-G12-G13 BUF-G12-G15
+  Level: 1
+Gate: G11
+  Type: NOR
+  Inputs: G5 G9
+  Outputs: BUF-G11-G10 BUF-G11-G6 BUF-G11-G17
+  Level: 7
+    \end{verbatim}
+
+  \end{problem}
+
+\end{document}
