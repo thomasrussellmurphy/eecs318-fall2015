@@ -1,0 +1,5 @@
+# Starting simple
+*.o
+bin
+dep
+obj
