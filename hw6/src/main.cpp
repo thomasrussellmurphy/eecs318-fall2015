@@ -27,6 +27,17 @@ typedef enum class Gate_operation
   INVALID
 } Gate_Op_t;
 
+class Gate_state
+{
+  public:
+
+  // States are two-bit encoded
+  // Value 2 should be reverted to sX
+  static const int s0 = 0;  // 2'b00
+  static const int s1 = 3;  // 2'b11
+  static const int sX = 1;  // 2'b01
+};
+
 const char* Gate_names[] = {"AND", "OR", "NAND", "NOR", "XOR", "XNOR", "NOT", "DFF", "BUF", "INPUT", "OUTPUT"};
 
 Gate_Op_t enumify_operation(std::string s)
@@ -109,10 +120,11 @@ typedef struct Gate
 {
   Gate_Op_t op;
   int level;
+  int state;
+  int dff_state;
   std::set<Gate*> fan_in;
   std::set<Gate*> fan_out;
   std::string name;
-  std::string op_name;
 } Gate_t;
 
 bool is_input_line(std::string line)
@@ -144,8 +156,9 @@ Gate_t* get_or_make_gate(std::unordered_map<std::string, Gate_t*>* gates, std::s
     gate = new(Gate_t);
     gate->name = name;
     gate->op = Gate_operation::INVALID;
-    gate->op_name = stringify_operation(Gate_operation::INVALID);
     gate->level = -1;
+    gate->state = Gate_state::sX;
+    gate->dff_state = Gate_state::sX;
     gates->insert(std::pair<std::string, Gate_t*>(name, gate));
   }
 
@@ -217,7 +230,6 @@ int main(int argc, char *argv[])
 
       Gate_t* input_gate = get_or_make_gate(&gates, net_name);
       input_gate->op = Gate_operation::INPUT;
-      input_gate->op_name = stringify_operation(Gate_operation::INPUT);
     }
 
     if(is_output_line(line))
@@ -250,7 +262,6 @@ int main(int argc, char *argv[])
         std::cerr << "invalid gate: " << gate_op_name << std::endl;
       }
       gate->op = gate_op;
-      gate->op_name = stringify_operation(gate_op);
 
       if(gate_op == Gate_operation::DFF)
       {
@@ -296,7 +307,6 @@ int main(int argc, char *argv[])
 
     add_input_net_to_gate(&gates, output_gate, output_net_name);
     output_gate->op = Gate_operation::OUTPUT;
-    output_gate->op_name = stringify_operation(Gate_operation::OUTPUT);
   }
 
   // Process circuit to add buffers on gates with fanout >1
@@ -323,7 +333,6 @@ int main(int argc, char *argv[])
       // Setup the new buffer
       Gate_t* buf = get_or_make_gate(&gates, buf_name);
       buf->op = Gate_operation::BUF;
-      buf->op_name = stringify_operation(Gate_operation::BUF);
       buf->fan_in.insert(source_gate);
 
       // Swap in buffer on the destination side
@@ -405,7 +414,7 @@ int main(int argc, char *argv[])
     Gate_t* gate = gate_pair.second;
     std::cout << "Gate: " << gate->name << std::endl;
 
-    std::cout << "  Type: " << gate->op_name << std::endl;
+    std::cout << "  Type: " << stringify_operation(gate->op) << std::endl;
 
     std::cout << "  Inputs: ";
     for(Gate_t* input : gate->fan_in)
