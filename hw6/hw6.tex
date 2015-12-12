@@ -1,0 +1,102 @@
+\documentclass[10pt]{article}
+
+\usepackage[psamsfonts]{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb,latexsym}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+
+\usepackage[left=2.35cm,top=2.45cm,bottom=2.45cm,right=2.35cm,letterpaper]{geometry}
+
+\usepackage{hyperref}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhf{}
+\fancyfoot[C,CO]{\thepage}
+\fancyhead[L,LO]{\bfseries EECS 318}
+\fancyhead[C,CO]{\bfseries Homework 6}
+\fancyhead[R,RO]{Fall 2015}
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}
+\newtheorem*{solution}{Solution}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\renewcommand{\labelenumi}{\textbf{(\alph{enumi})}}
+\renewcommand{\labelenumii}{\textbf{(\roman{enumii})}}
+
+\newcommand{\ds}{\displaystyle}
+
+\newcommand{\ttname}[1]{\texttt{\detokenize{#1}}}
+
+\parindent=0pt
+
+\begin{document}
+
+  \begin{center}
+  \section*{Homework 6}
+  \end{center}
+  Thomas Murphy (\textit{trm70})
+
+  \today
+
+  \bigskip
+
+  \begin{problem}
+    ISCAS Benchmark Simulator and Performance Tester
+
+    The input format processor and simulator is implemented in \ttname{src/main.cpp}. The base of the processor was taken from HW5. In should be compiled using the provided \ttname{Makefile} to ensure the correct compiler configuration is used. This program makes heavy use of \ttname{C++11} features. The two provided input sets are located in \ttname{inputs/}.
+
+    \bigskip
+
+    The simulator is run using the command \ttname{main netlist.txt inputs.vec outfile [s/t]}. The two input filenames are the ISCAS benchmark file and a plain-text table of the value for each primary input declared in the ISCAS format. The simulation state after each input is processed is written to a file with the given name. The simulator uses either \textbf{t}able-lookup or input-\textbf{s}canning depending on the flag given.
+
+    \bigskip
+
+    The output file for the \ttname{inputs/s27.txt} input circuit with the \ttname{inputs/s27.vec} input vectors is as follows. In table-lookup mode, the simulation takes 0.000819224s. In input-scanning mode, the simulation takes 0.000650427s.
+
+    \begin{verbatim}
+Input  :0000
+State  :XXX
+Output :X
+
+Input  :0010
+State  :0XX
+Output :X
+
+Input  :0100
+State  :0X0
+Output :X
+
+Input  :1000
+State  :0X1
+Output :1
+
+Input  :1111
+State  :101
+Output :1
+
+
+    \end{verbatim}
+
+    \bigskip
+
+    The ~500kB output file for the \ttname{inputs/s35932.txt} input circuit with the \ttname{inputs/s35932.vec} is not included in this document. In table-lookup mode, the simulation takes 366.31s. In input-scanning mode, the simulation takes 214.304s.
+
+    \bigskip
+
+    For this implementation of the two simulation techniques, it appears that the input-scanning technique is faster than the table-lookup technique.
+
+  \end{problem}
+
+\end{document}
