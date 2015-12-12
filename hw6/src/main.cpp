@@ -38,6 +38,49 @@ class Gate_state
   static const int sX = 1;  // 2'b01
 };
 
+class Gate_eval
+{
+  public:
+
+  // Gates are hard-coded against Gate_state values
+  static int AND[4][4];
+  static int OR[4][4];
+  static int NAND[4][4];
+  static int NOR[4][4];
+  static int NOT[4];
+};
+
+int Gate_eval::AND[4][4] = {
+  {Gate_state::s0, Gate_state::s0, Gate_state::sX, Gate_state::s0},
+  {Gate_state::s0, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::s0, Gate_state::sX, Gate_state::sX, Gate_state::s1},
+  };
+
+int Gate_eval::OR[4][4] = {
+  {Gate_state::s0, Gate_state::sX, Gate_state::sX, Gate_state::s1},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::s1},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::s1, Gate_state::s1, Gate_state::sX, Gate_state::s1},
+  };
+
+int Gate_eval::NAND[4][4] = {
+  {Gate_state::s1, Gate_state::s1, Gate_state::sX, Gate_state::s1},
+  {Gate_state::s1, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::s1, Gate_state::sX, Gate_state::sX, Gate_state::s0},
+  };
+
+int Gate_eval::NOR[4][4] = {
+  {Gate_state::s1, Gate_state::sX, Gate_state::sX, Gate_state::s0},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::s0},
+  {Gate_state::sX, Gate_state::sX, Gate_state::sX, Gate_state::sX},
+  {Gate_state::s0, Gate_state::s0, Gate_state::sX, Gate_state::s0},
+  };
+
+int Gate_eval::NOT[4] =
+  {Gate_state::s1, Gate_state::sX, Gate_state::sX, Gate_state::s0};
+
 const char* Gate_names[] = {"AND", "OR", "NAND", "NOR", "XOR", "XNOR", "NOT", "DFF", "BUF", "INPUT", "OUTPUT"};
 
 Gate_Op_t enumify_operation(std::string s)
@@ -171,6 +214,99 @@ void add_input_net_to_gate(std::unordered_map<std::string, Gate_t*>* gates, Gate
 
   gate->fan_in.insert(input_gate);
   input_gate->fan_out.insert(gate);
+}
+
+int eval_table(Gate_t* gate)
+{
+  std::vector<int> input_states;
+  for(Gate_t* input : gate->fan_in)
+  {
+    input_states.push_back(input->state);
+  }
+
+  switch(gate->op)
+  {
+    case Gate_operation::AND:
+      return Gate_eval::AND[input_states[0]][input_states[1]];
+    case Gate_operation::OR:
+      return Gate_eval::OR[input_states[0]][input_states[1]];
+    case Gate_operation::NAND:
+      return Gate_eval::NAND[input_states[0]][input_states[1]];
+    case Gate_operation::NOR:
+      return Gate_eval::NOR[input_states[0]][input_states[1]];
+    case Gate_operation::NOT:
+      return Gate_eval::NOT[input_states[0]];
+    case Gate_operation::BUF:
+    case Gate_operation::OUTPUT:
+      return input_states[0];
+    default:
+      std::cerr << "Attempted to evaluate not-implemented gate" << std::endl;
+      return Gate_state::sX;
+    }
+}
+
+int eval_scan(Gate_t* gate)
+{
+  int control = Gate_state::s0;
+  bool inversion = false;
+
+  switch(gate->op)
+  {
+    case Gate_operation::AND:
+      control = Gate_state::s0;
+      inversion = false;
+      break;
+    case Gate_operation::OR:
+      control = Gate_state::s1;
+      inversion = false;
+      break;
+    case Gate_operation::NAND:
+      control = Gate_state::s0;
+      inversion = true;
+      break;
+    case Gate_operation::NOR:
+      control = Gate_state::s1;
+      inversion = true;
+      break;
+    case Gate_operation::NOT:
+      // Invert the only fan_in gate to get the new state
+      for(Gate_t* source : gate->fan_in)
+      {
+        return Gate_eval::NOT[source->state];
+      }
+    case Gate_operation::BUF:
+    case Gate_operation::OUTPUT:
+      // Pass the only fan_in gate to the new state
+      for(Gate_t* source : gate->fan_in)
+      {
+        return source->state;
+      }
+    default:
+      std::cerr << "Attempted to evaluate not-implemented gate" << std::endl;
+      return Gate_state::sX;
+  }
+
+
+  bool unknown_input = false;
+  for(Gate_t* input : gate->fan_in)
+  {
+    if(input->state == control)
+    {
+      return inversion ? Gate_eval::NOT[control] : control ;
+    }
+    if(input->state == Gate_state::sX)
+    {
+      unknown_input = true;
+    }
+  }
+
+  if(unknown_input)
+  {
+    return Gate_state::sX;
+  } else {
+    // Piles of confusing double-negatives, yo
+    return inversion ? control : Gate_eval::NOT[control] ;
+  }
 }
 
 int main(int argc, char *argv[])
