@@ -1,5 +1,7 @@
 #include <array>
+#include <chrono>
 #include <cstdio>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -36,7 +38,38 @@ class Gate_state
   static const int s0 = 0;  // 2'b00
   static const int s1 = 3;  // 2'b11
   static const int sX = 1;  // 2'b01
+
+  static char to_char(int i);
+  static int to_state(char c);
 };
+
+char Gate_state::to_char(int i)
+{
+  switch(i)
+  {
+    case s0:
+      return '0';
+    case s1:
+      return '1';
+    case sX:
+      return 'X';
+    default:
+      return '?';
+  }
+}
+
+int Gate_state::to_state(char c)
+{
+  switch(c)
+  {
+    case '0':
+      return Gate_state::s0;
+    case '1':
+      return Gate_state::s1;
+    default:
+      return Gate_state::sX;
+  }
+}
 
 class Gate_eval
 {
@@ -238,6 +271,7 @@ int eval_table(Gate_t* gate)
       return Gate_eval::NOT[input_states[0]];
     case Gate_operation::BUF:
     case Gate_operation::OUTPUT:
+    case Gate_operation::DFF:
       return input_states[0];
     default:
       std::cerr << "Attempted to evaluate not-implemented gate" << std::endl;
@@ -276,6 +310,7 @@ int eval_scan(Gate_t* gate)
       }
     case Gate_operation::BUF:
     case Gate_operation::OUTPUT:
+    case Gate_operation::DFF:
       // Pass the only fan_in gate to the new state
       for(Gate_t* source : gate->fan_in)
       {
@@ -309,10 +344,34 @@ int eval_scan(Gate_t* gate)
   }
 }
 
+int eval(Gate_t* gate, bool table)
+{
+  if(table)
+  {
+    return eval_table(gate);
+  } else
+  {
+    return eval_scan(gate);
+  }
+}
+
+void schedule_fanout(std::map<int, std::set<Gate_t*>*>* schedule, Gate_t* gate)
+{
+  for(Gate_t* scheduled_gate : gate->fan_out)
+  {
+    if(scheduled_gate->op != Gate_operation::OUTPUT && scheduled_gate->op != Gate_operation::DFF)
+    {
+      std::set<Gate_t*>* level_schedule = schedule->at(scheduled_gate->level);
+      level_schedule->insert(scheduled_gate);
+    }
+  }
+}
+
 int main(int argc, char *argv[])
 {
-  if(argc == 1) {
-    std::cerr << "No argument file to open." << std::endl;
+  if(argc != 5) {
+    std::cerr << "Usage:" << std::endl;
+    std::cerr << "\tmain netlist.txt inputs.vec outfile [s/t]" << std::endl;
     std::exit(0);
   }
 
@@ -321,7 +380,7 @@ int main(int argc, char *argv[])
 
   if(!source.is_open())
   {
-    std::cerr << "Failed to open source file." << std::endl;
+    std::cerr << "Failed to open netlist file." << std::endl;
     std::exit(1);
   }
 
@@ -519,57 +578,134 @@ int main(int argc, char *argv[])
     }
   }
 
-  // REQUIREMENT 1: total number of gates after processing
-  std::cout << "Total processed gates, inputs, and outputs: ";
-  std::cout << gates.size() << std::endl;
 
-  // REQUIREMENT 2: number of gates at each level
-  std::map<int, int> levels_count;
+  // Create our simulation scheduling struct
+  std::map<int, std::set<Gate_t*>*> scheduled_levels;
   for(std::pair<std::string, Gate_t*> gate_pair : gates)
   {
     int level = gate_pair.second->level;
 
-    if(levels_count.count(level))
+    if(!scheduled_levels.count(level))
     {
-      levels_count.at(level) += 1;
-    } else
-    {
-      levels_count.insert(std::pair<int, int>(level, 1));
+      // Create and add our scheduling set at this level
+      std::set<Gate_t*> level_set;
+      scheduled_levels.insert(std::pair<int, std::set<Gate_t*>*>(level, &level_set));
     }
   }
 
-  for(std::pair<int, int> level_count_pair : levels_count)
+  // Get filename argument for the input vector file
+  std::ifstream sim_vectors(argv[2]);
+
+  if(!sim_vectors.is_open())
   {
-    std::cout << "Level " << level_count_pair.first << ": ";
-    std::cout << level_count_pair.second << std::endl;
+    std::cerr << "Failed to open inputs file." << std::endl;
+    std::exit(1);
   }
 
-  // REQUIREMENT 3: listing of whole circuit
-  for(std::pair<std::string, Gate_t*> gate_pair : gates)
+  // Get filename argument for the simulation output file
+  std::ofstream sim_output(argv[3]);
+
+  if(!sim_output.is_open())
   {
-    Gate_t* gate = gate_pair.second;
-    std::cout << "Gate: " << gate->name << std::endl;
-
-    std::cout << "  Type: " << stringify_operation(gate->op) << std::endl;
-
-    std::cout << "  Inputs: ";
-    for(Gate_t* input : gate->fan_in)
-    {
-      std::cout << input->name << " ";
-    }
-
-    std::cout << std::endl;
-
-    std::cout << "  Outputs: ";
-    for(Gate_t* output : gate->fan_out)
-    {
-      std::cout << output->name << " ";
-    }
-
-    std::cout << std::endl;
-
-    std::cout << "  Level: " << gate->level;
-
-    std::cout << std::endl;
+    std::cerr << "Failed to open simulation output file." << std::endl;
+    std::exit(1);
   }
+
+  bool use_table = true;
+
+  if(std::strcmp(argv[4], "t") == 0)
+  {
+    use_table = true;
+  } else if(std::strcmp(argv[4], "s") == 0)
+  {
+    use_table = false;
+  } else
+  {
+    std::cerr << "Improperly defined simulation type, using table" << std::endl;
+    use_table = true;
+  }
+
+  std::chrono::time_point<std::chrono::steady_clock> start, end;
+  start = std::chrono::steady_clock::now();
+
+  // Simulation processing loop, line-by-line
+  while(getline(sim_vectors, line))
+  {
+    // Use line of new states to assign primary inputs, schedule fanouts
+    if(input_nets.size() != line.size())
+    {
+      std::cerr << "Invalid input line length" << std::endl;
+      std::exit(1);
+    }
+
+    for(std::string input_name : input_nets)
+    {
+      int next_state = Gate_state::to_state(line.front());
+      line.erase(0, 1);
+
+      Gate_t* input_gate = gates[input_name];
+
+      if(next_state != input_gate->state)
+      {
+        schedule_fanout(&scheduled_levels, input_gate);
+        gates[input_name]->state = next_state;
+      }
+    }
+
+    // Load all DFF next states and schedule fanouts
+    for(std::string dff_name : dff_gates)
+    {
+      Gate_t* dff_gate = gates[dff_name];
+      dff_gate->state = eval(dff_gate, use_table);
+      if(dff_gate->state != dff_gate->dff_state)
+      {
+        schedule_fanout(&scheduled_levels, dff_gate);
+        dff_gate->dff_state = dff_gate->state;
+      }
+    }
+
+    // Simulation loop through each level
+    for(std::pair<int, std::set<Gate_t*>*> level_pair : scheduled_levels)
+    {
+      std::set<Gate_t*> level_set = *level_pair.second;
+      for(Gate_t* gate : level_set)
+      {
+        int next_state = eval(gate, use_table);
+        if(gate->state != next_state)
+        {
+          schedule_fanout(&scheduled_levels, gate);
+          gate->state = next_state;
+        }
+      }
+      level_set.clear();
+    }
+
+    // Print current states
+    sim_output << "Input  :";
+    for(std::string input_name : input_nets)
+    {
+      sim_output << Gate_state::to_char(gates[input_name]->state);
+    }
+    sim_output << std::endl;
+
+    sim_output << "State  :";
+    for(std::string dff_name : dff_gates)
+    {
+      sim_output << Gate_state::to_char(gates[dff_name]->dff_state);
+    }
+    sim_output << std::endl;
+
+    sim_output << "Output :";
+    for(std::string output_name : output_nets)
+    {
+      sim_output << Gate_state::to_char(gates[output_name]->state);
+    }
+    sim_output << std::endl;
+
+    sim_output << std::endl;
+  }
+
+  end = std::chrono::steady_clock::now();
+  std::chrono::duration<double> elapsed_seconds = end-start;
+  std::clog << "Elapsed time: " << elapsed_seconds.count() << 's' << std::endl;
 }
